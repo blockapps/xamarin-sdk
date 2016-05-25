@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BlockAppsSDK.Users;
+using Newtonsoft.Json;
 
 namespace BlockAppsSDK.Contracts
 {
@@ -33,8 +34,19 @@ namespace BlockAppsSDK.Contracts
         }
 
         //Static Methods
-        public static Task<Contract> DeployContract(string src, User user, Account account)
+        public static async Task<Contract> DeployContract(string src, User user, Account account)
         {
+            var url = ConnectionString.BlocUrl + "/users/" + user.Name + "/" + account.Address + "/contract";
+
+            var postModel = new DeployContractModel
+            {
+                password = user.Password,
+                src = src
+            };
+
+            var serializedModel = JsonConvert.SerializeObject(postModel);
+            var responseContent = await Utils.POST(url, serializedModel);
+
             throw new NotImplementedException();
         }
 
@@ -47,6 +59,13 @@ namespace BlockAppsSDK.Contracts
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class DeployContractModel
+    {
+        public string password { get; set; }
+
+        public string src { get; set; }
     }
 
     
