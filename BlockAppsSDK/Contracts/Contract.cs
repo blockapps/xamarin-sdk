@@ -17,7 +17,7 @@ namespace BlockAppsSDK.Contracts
         public Dictionary<string,string> Properties { get; set; }
 
         //Methods
-        public string CallMethod(string name)
+        public string CallMethod(string name, Dictionary<string,object> args, string password, Account account)
         {
             if (name == null || name.Equals(""))
             {
@@ -29,8 +29,23 @@ namespace BlockAppsSDK.Contracts
 
         public bool Refresh()
         {
+            throw new NotImplementedException();
+        }
 
-            return true;
+        //Static Methods
+        public static Task<Contract> DeployContract(string src, User user, Account account)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Task<string> GetContractAddress(string contractName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Task<Contract> GetContract(string contractName)
+        {
+            throw new NotImplementedException();
         }
     }
 

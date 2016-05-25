@@ -11,6 +11,8 @@ namespace BlockAppsSDK.Users
         //Properties
         public string Name { get; set; }
 
+        public string Password { get; set; }
+
         public List<Account> Accounts { get; set; }
 
         //Methods
@@ -18,5 +20,13 @@ namespace BlockAppsSDK.Users
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class PostNewUserModel
+    {
+        //Properties
+        public string password { get; set; }
+
+        public string faucet { get; set; }
     }
 }

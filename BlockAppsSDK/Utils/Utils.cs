@@ -9,7 +9,6 @@ namespace BlockAppsSDK
 {
     public static class Utils
     {
-
         public static async Task<string> GET(string url)
         {
             //return await new HttpClient().GetAsync(url);
@@ -27,7 +26,7 @@ namespace BlockAppsSDK
 
         public static async Task<string> POST(string url, string jsonObject)
         {
-            var response = await new HttpClient().PostAsync(url, new StringContent(jsonObject, Encoding.UTF8));
+            var response = await new HttpClient().PostAsync(url, new StringContent(jsonObject, Encoding.UTF8, "application/json"));
 
             if (response.IsSuccessStatusCode)
             {

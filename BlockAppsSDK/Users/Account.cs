@@ -17,7 +17,7 @@ namespace BlockAppsSDK.Users
 
         public string Balance { get; set; }
 
-        public string Addres { get; set; }
+        public string Address { get; set; }
 
         public string LatestBlockNum { get; set; }
 
@@ -37,16 +37,23 @@ namespace BlockAppsSDK.Users
             {
                 throw new ArgumentException("Address is null or empty", nameof(address));
             }
-            var url = BlockAppsSDK.StratoUrl + "/account?address=" + address;
-
-            return JsonConvert.DeserializeObject<List<Account>>(await Utils.GET(url)).First();
+            var url = ConnectionString.StratoUrl + "/account?address=" + address;
+            var accountList = JsonConvert.DeserializeObject<List<Account>>(await Utils.GET(url));
+            if (accountList.Count > 0)
+            {
+                return accountList.First();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static async Task<List<Account>> GetAccounts(string username)
         {
-            var addresses = JsonConvert.DeserializeObject<string[]>(await Utils.GET(BlockAppsSDK.BlocUrl + "/users/" + username));
+            var addresses = JsonConvert.DeserializeObject<string[]>(await Utils.GET(ConnectionString.BlocUrl + "/users/" + username));
             List<Task<string>> accountTasks = (from address in addresses
-                                               select Utils.GET(BlockAppsSDK.StratoUrl + "account?address=" + address)).ToList();
+                                               select Utils.GET(ConnectionString.StratoUrl + "account?address=" + address)).ToList();
             List<string> accountJsonList = (await Task.WhenAll(accountTasks)).ToList();
 
             return accountJsonList.Select(x => JsonConvert.DeserializeObject<Account[]>(x)[0]).ToList();
@@ -54,22 +61,28 @@ namespace BlockAppsSDK.Users
 
         public static async Task<List<string>> GetAccountAddresses()
         {
-            var res = await Utils.GET(BlockAppsSDK.BlocUrl + "/users");
+            var res = await Utils.GET(ConnectionString.BlocUrl + "/users");
             var users = JsonConvert.DeserializeObject<List<string>>(res);
             List<Task<string>> userTasks = (from user in users
-                                               select Utils.GET(BlockAppsSDK.BlocUrl + "/users/" + user)).ToList();
+                                               select Utils.GET(ConnectionString.BlocUrl + "/users/" + user)).ToList();
             return (await Task.WhenAll(userTasks)).ToList();
         }
 
-        public static Task<Account> CreateAccount(string name)
+        public static async Task<Account> CreateAccount(string name, string password, bool faucet)
         {
             if (name == null || name.Equals(""))
             {
                 throw new ArgumentException("Name is null or empty", nameof(name));
             }
-
-            throw new NotImplementedException();
-            //var url = BlockAppsSDK.BlocUrl + "/users"
+            var url = ConnectionString.BlocUrl + "/users/" + name;
+            var postModel = new PostNewUserModel
+            {
+                password = password,
+                faucet = faucet ? "1" : "0"
+            };
+            var serializedModel = JsonConvert.SerializeObject(postModel);
+            var userAddress = await Utils.POST(url, serializedModel);
+            return await GetAccount(userAddress);
         }
     }
 }

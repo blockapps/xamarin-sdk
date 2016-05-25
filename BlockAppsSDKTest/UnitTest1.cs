@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BlockAppsSDK.Users;
+using BlockAppsSDK;
+
 
 namespace BlockAppsSDKTest
 {
@@ -18,10 +20,19 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod2()
         {
-            BlockAppsSDK.BlockAppsSDK.BlocUrl = "http://13.93.154.77:8000";
+            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
             var account = await Account.GetAccountAddresses();
             var accounts = await Account.GetAccounts("admin");
             var x = "sup";
+        }
+
+        [TestMethod]
+        public async Task TestMethod3()
+        {
+            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            var newAccount = await Account.CreateAccount("testMethod3", "asdf", true);
+            var x = "sup";
+            
         }
 
 
