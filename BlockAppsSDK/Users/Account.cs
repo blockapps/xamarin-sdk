@@ -24,7 +24,7 @@ namespace BlockAppsSDK.Users
         public string LatestBlockId { get; set; }
 
         //Methods
-        public bool Send(uint value)
+        public bool Send(string address, uint value, string user)
         {
             throw new NotImplementedException();
         }
@@ -85,4 +85,5 @@ namespace BlockAppsSDK.Users
             return await GetAccount(userAddress);
         }
     }
+
 }

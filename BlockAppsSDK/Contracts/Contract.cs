@@ -17,6 +17,17 @@ namespace BlockAppsSDK.Contracts
         
         public Dictionary<string,string> Properties { get; set; }
 
+        //Constructor
+        public Contract(Account account)
+        {
+            ContractRoot = account.ContractRoot;
+            Kind = account.Kind;
+            Balance = account.Balance;
+            Address = account.Address;
+            LatestBlockNum = account.LatestBlockNum;
+            LatestBlockId = account.LatestBlockId;
+        }
+
         //Methods
         public string CallMethod(string name, Dictionary<string,object> args, string password, Account account)
         {
@@ -34,7 +45,12 @@ namespace BlockAppsSDK.Contracts
         }
 
         //Static Methods
-        public static async Task<Contract> DeployContract(string src, User user, Account account)
+        //private static string parseContractName(string src)
+        //{
+        //    var last = src.IndexOf('{');
+        //}
+
+        public static async Task<Contract> DeployContract(string src, string contractName, User user, Account account)
         {
             var url = ConnectionString.BlocUrl + "/users/" + user.Name + "/" + account.Address + "/contract";
 
@@ -43,21 +59,61 @@ namespace BlockAppsSDK.Contracts
                 password = user.Password,
                 src = src
             };
-
             var serializedModel = JsonConvert.SerializeObject(postModel);
             var responseContent = await Utils.POST(url, serializedModel);
+            var address = JsonConvert.DeserializeObject<string>(responseContent);
+            return await GetContract(contractName);
 
-            throw new NotImplementedException();
+            
         }
 
-        public static Task<string> GetContractAddress(string contractName)
+        public static async Task<string> GetContractAddress(string name)
         {
-            throw new NotImplementedException();
+            var url = ConnectionString.BlocUrl + "/contracts/" + name;
+            var responseContent = await Utils.GET(url);
+            var contractState = JsonConvert.DeserializeObject<string[]>(responseContent)[0];
+
+            return contractState; ;
         }
 
-        public static Task<Contract> GetContract(string contractName)
+        public static async Task<Contract> GetContract(string contractName)
         {
-            throw new NotImplementedException();
+            var address = await GetContractAddress(contractName);
+
+            var contractTask = GetAccount(address);
+            var stateTask = GetContractState(address, contractName);
+
+            var account = await contractTask;
+
+            var contract = new Contract(account)
+            {
+                Name = contractName,
+                Methods = new List<string>(),
+                Properties = new Dictionary<string, string>()
+            };
+
+            var state = await stateTask;
+            foreach (var keyValuePair in state)
+            {
+                if (keyValuePair.Value.Contains("function"))
+                {
+                    contract.Methods.Add(keyValuePair.Key);
+                }
+                else
+                {
+                    contract.Properties.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+            return contract;
+        }
+
+        public static async Task<Dictionary<string, string>> GetContractState(string address, string name)
+        {
+            var url = ConnectionString.BlocUrl + "/contracts/" + name + "/" + address + "/state";
+            var responseContent = await Utils.GET(url);
+            var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
+
+            return contractState;
         }
     }
 

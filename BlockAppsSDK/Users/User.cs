@@ -16,9 +16,16 @@ namespace BlockAppsSDK.Users
         public List<Account> Accounts { get; set; }
 
         //Methods
-        public bool Send(string toAddress)
+        public async Task<User> CreateUser(string name, string password)
         {
-            throw new NotImplementedException();
+            var newUser = new User
+            {
+                Name = name,
+                Password = password,
+                Accounts = new List<Account>()
+            };
+            newUser.Accounts.Add(await Account.CreateAccount(name, password, true));
+            return newUser;
         }
     }
 

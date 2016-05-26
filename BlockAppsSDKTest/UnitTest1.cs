@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BlockAppsSDK.Users;
 using BlockAppsSDK;
+using BlockAppsSDK.Contracts;
 
 
 namespace BlockAppsSDKTest
@@ -35,6 +36,16 @@ namespace BlockAppsSDKTest
             
         }
 
+        [TestMethod]
+        public async Task TestMethod4()
+        {
+            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            var contractAddress = await Contract.GetContractAddress("SimpleStorage");
+            var contractState = await Contract.GetContractState(address: "a4f5503c2e3f32bc567c1e654f6d69fec71f46ef", name: "SimpleStorage");
+            var contract = await Contract.GetContract("SimpleStorage");
+           
+            var x = "sup";
 
+        }
     }
 }
