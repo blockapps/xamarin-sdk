@@ -27,6 +27,18 @@ namespace BlockAppsSDK.Users
             newUser.Accounts.Add(await Account.CreateAccount(name, password, true));
             return newUser;
         }
+
+
+        //Static Methods
+        public static async Task<User> GetUser(string name, string password)
+        {
+            return new User
+            {
+                Name = name,
+                Password = password,
+                Accounts = await Account.GetAccounts(name)
+            };
+        }
     }
 
     public class PostNewUserModel
