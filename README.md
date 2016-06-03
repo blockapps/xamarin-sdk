@@ -61,7 +61,6 @@ following git commands.
 
 ```
 git clone https://github.com/blockapps/xamarin-sdk.git
-
 ```
 
 You will then need to open and build the project from Visual Studio
