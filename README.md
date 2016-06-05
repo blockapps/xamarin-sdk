@@ -82,11 +82,14 @@ manager console enter:
 Install-Package BlockAppsSDK -Pre
 ```
 
-In **Xamarin Studio** you can find this option under the `Project menu -> Add
+In **Xamarin Studio** you can find the package by navigating to `Project menu -> Add
 Nuget Packages...`
+* Check the *Show pre-release packages* box and search `BlockAppsSDK`.
 
-In **Visual Studio** you can find this option under the `Project menu -> Manage
+In **Visual Studio** you can find the package by navigating to `Project menu -> Manage
 Nuget Packages...`
+* Select the *Browse* tab and check the *Include prerelease* box. Search for `BlockAppsSDK`.
+
 ## Documentation
 
 Documentation is in the works!
