@@ -11,6 +11,7 @@ namespace BlockAppsSDK.Blocks
     {
         public string Next { get; set; }
         public string Kind { get; set; }
+        public string Hash { get; set; }
         public List<string> BlockUncles { get; set; }
         public List<ReceiptTransaction> ReceiptTransactions { get; set; }
         public BlockData BlockData { get; set; }

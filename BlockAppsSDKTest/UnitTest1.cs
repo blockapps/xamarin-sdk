@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BlockAppsSDK.Users;
@@ -12,12 +13,11 @@ namespace BlockAppsSDKTest
     [TestClass]
     public class UnitTest1
     {
-        [TestMethod]
-        public async Task TestMethod1()
-        {
-            var address = "3d726b4b0f75e242d4f0c8ebbef438d41dd1fe33";
-            var account = await Account.GetAccount(address);
-        }
+        //[TestMethod]
+        //public async Task TestMethod1()
+        //{
+        //    var account = await Account.GetAccount(address);
+        //}
 
         [TestMethod]
         public async Task TestMethod2()
@@ -52,18 +52,18 @@ namespace BlockAppsSDKTest
         //[TestMethod]
         //public async Task TestMethod5()
         //{
-        //    ConnectionString.BlocUrl = "http://13.93.154.77:8000";
-        //    var userTask = User.GetUser("charlie", "test");
-        //    var contractTask = Contract.GetContract("SimpleStorage");
+            //ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            //var userTask = User.GetUser("charlie", "test");
+            //var contractTask = Contract.GetContract("SimpleStorage");
 
-        //    var user = await userTask;
-        //    var contract = await contractTask;
-        //    var args = new Dictionary<string,string>();
-        //    args.Add("x","1");
-        //    //args = null;
-        //    var resp = await contract.CallMethod("set", args, user, user.Accounts[0].Address, 3);
+            //var user = await userTask;
+            //var contract = await contractTask;
+            //var args = new Dictionary<string,string>();
+            //args.Add("x","1");
+            ////args = null;
+            //var resp = await contract.CallMethod("set", args, user, user.Accounts[0].Address, 3);
 
-        //    var x = "sup";
+            //var x = "sup";
 
         //}
 
@@ -101,5 +101,54 @@ namespace BlockAppsSDKTest
 
             var x = "sup";
         }
+
+        [TestMethod]
+        public async Task TestMethod8()
+        {
+            ConnectionString.StratoUrl = "http://xamarintest.centralus.cloudapp.azure.com/strato-single/eth/v1.1/";
+            ConnectionString.BlocUrl = "http://xamarintest.centralus.cloudapp.azure.com:8000";
+            var charlie = await User.GetUser("charlie", "test");
+            Assert.AreSame(charlie.Name,"charlie");
+            Assert.AreSame(charlie.Password,"test");
+            Assert.AreSame(charlie.Accounts.Count,1);
+        }
+
+        [TestMethod]
+        public async Task TestMethod9()
+        {
+            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+
+            //BlockApps strato dev instance
+            ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
+            var testUser = await User.CreateUser("testUser", "securePassword");
+            if (testUser == null)
+            {
+                Console.WriteLine("User already exists, add an account through the Account class.");
+            }
+            else
+            {
+                Console.WriteLine(testUser.Name + " has account:" + testUser.Accounts[0].Address + " with balance: " + testUser.Accounts[0].Balance);
+            }
+
+
+            //====================//
+            ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
+            var userTask = User.GetUser("testUser", "securePassword");
+            var contractString =
+                "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
+
+
+            var user = await userTask;
+            var contractTask = Contract.DeployContract(contractString, "SimpleStorage", user, user.Accounts[0]);
+            var contract = await contractTask;
+            Console.WriteLine("The value of storedData is: " + contract.Properties["storedData"]);
+            var args = new Dictionary<string, string>();
+            args.Add("x", "10");
+            var resp = await contract.CallMethod("set", args, user, user.Accounts[0].Address, 1);
+            await contract.Refresh();
+            Console.WriteLine("The new value of storedData is: " + contract.Properties["storedData"]);
+
+        }
+
     }
 }

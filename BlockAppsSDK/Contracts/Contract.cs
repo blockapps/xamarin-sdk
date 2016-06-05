@@ -44,9 +44,30 @@ namespace BlockAppsSDK.Contracts
 
         }
 
-        public bool Refresh()
+        public async Task<bool> Refresh()
         {
-            throw new NotImplementedException();
+            var stateTask = GetContractState(Address, Name);
+            var state = await stateTask;
+            if (state == null)
+            {
+                return false;
+            }
+
+            Methods.Clear();
+            Properties.Clear();
+            foreach (var keyValuePair in state)
+            {
+                if (keyValuePair.Value.Contains("function"))
+                {
+                    Methods.Add(keyValuePair.Key);
+                }
+                else
+                {
+                    Properties.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+
+            return true;
         }
 
         public static async Task<Contract> DeployContract(string src, string contractName, User user, Account account)
