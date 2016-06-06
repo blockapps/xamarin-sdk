@@ -135,11 +135,11 @@ namespace BlockAppsSDKTest
             ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
             var userTask = User.GetUser("testUser", "securePassword");
             var contractString =
-                "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
+                "contract SimpleStorage4 { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
 
 
             var user = await userTask;
-            var contractTask = Contract.DeployContract(contractString, "SimpleStorage", user, user.Accounts[0]);
+            var contractTask = Contract.DeployContract(contractString, "SimpleStorage4", user, user.Accounts[0]);
             var contract = await contractTask;
             Console.WriteLine("The value of storedData is: " + contract.Properties["storedData"]);
             var args = new Dictionary<string, string>();
