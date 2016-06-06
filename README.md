@@ -99,7 +99,15 @@ If you have any issues building after adding the package please see **Workaround
 
 In **Visual Studio (Windows)** you can find the package by navigating to `Project menu -> Manage
 NuGet Packages...`
-* Select the *Browse* tab and check the *Include prerelease* box. Search for `BlockAppsSDK`.
+
+![mng_pkg](https://github.com/blockapps/xamarin-sdk/blob/master/images/mng_pkg_win.png?raw=true)
+
+Select the *Browse* tab and check the *Include prerelease* box. Search for `BlockAppsSDK`.
+
+![install_pkg](https://github.com/blockapps/xamarin-sdk/blob/master/images/install_pkg_win.png?raw=true)
+
+Click `Install` and the BlockAppsSDK will be added to your project. Please see **Workaround 3** under problems
+to resolve a common installation issue with our package.
 
 ## Documentation
 
@@ -168,6 +176,19 @@ checked, select it to check it.
 
 ![system.net](https://github.com/blockapps/xamarin-sdk/blob/master/images/systemnethttp.png?raw=true)
 
+####Workaround 3
+
+After adding the package, if you do not see `BlockAppsSDK` under the `References` in the Solution Explorer
+then, the .dll must be manually added to the project.
+
+Right click `References` and select `Add Reference...`
+
+![add_ref](https://github.com/blockapps/xamarin-sdk/blob/master/images/add_ref_win.png?raw=true)
+
+In Reference Manager select `Browse`. A list of .dll files will be displayed. Check the box for 
+`BlockAppsSDK.dll`. Click `Okay`. You should now see BlockAppsSDK listed as a reference.
+
+![add_ref_win](https://github.com/blockapps/xamarin-sdk/blob/master/images/add_dll_win.png?raw=true)
 
 BlockAppsSDK for Xamarin is in alpha stage and may contain bugs. If you do find
 any please visit the
