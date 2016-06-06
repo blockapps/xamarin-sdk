@@ -21,7 +21,7 @@ ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
 
 var block = await Block.GetBlock(0);
 
-Console.WriteLine("Block 0 has Parent Hash: " + block.ParentHash);
+Console.WriteLine("Block 0 has Parent Hash: " + block.BlockData.ParentHash);
 ```
 
 
