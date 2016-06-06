@@ -82,12 +82,20 @@ manager console enter:
 Install-Package BlockAppsSDK -Pre
 ```
 
-In **Xamarin Studio** you can find the package by navigating to `Project menu -> Add
-Nuget Packages...`
-* Check the *Show pre-release packages* box and search `BlockAppsSDK`.
+In **Xamarin Studio (Mac)** you can find the package by navigating to `Project menu -> Add
+NuGet Packages...`
 
-In **Visual Studio** you can find the package by navigating to `Project menu -> Manage
-Nuget Packages...`
+![project_addpkg](https://github.com/blockapps/xamarin-sdk/blob/master/images/project_addpkg.png?raw=true)
+
+Check the *Show pre-release packages* box and search `BlockAppsSDK`. This should
+result in the following screen.
+
+![search_package](https://github.com/blockapps/xamarin-sdk/blob/master/images/add_pkg.png?raw=true)
+
+Click `Add Package`. Xamarin Studio will install the package dependencies into the project.
+
+In **Visual Studio (Windows)** you can find the package by navigating to `Project menu -> Manage
+NuGet Packages...`
 * Select the *Browse* tab and check the *Include prerelease* box. Search for `BlockAppsSDK`.
 
 ## Documentation
@@ -124,6 +132,37 @@ MSBuild BlockAppsSDK.csproj
 Contribution Guidelines are TBD at the moment but coming soon.
 
 ## Problems?
+**Workaround 1:** After adding the package, if you do not see `BlockAppsSDK` under the `References -> From Packages` in the Solution Explorer
+then the .dll must be manually added to the project.
+
+Navigate to  `Project menu -> Edit References`
+
+![edit_ref](https://github.com/blockapps/xamarin-sdk/blob/master/images/edit_ref.png?raw=true)
+
+Select the `.Net Assembly` tab and click `Browse...`
+
+![dotnet_asm](https://github.com/blockapps/xamarin-sdk/blob/master/images/dotnet_assembly.png?raw=true)
+
+In the project directory select `packages` folder, then select the folder with the version of `BlockAppsSDK`
+installed in the project. Click the `bin` folder.
+
+![find_bin](https://github.com/blockapps/xamarin-sdk/blob/master/images/bin_location.png?raw=true)
+
+Once in `bin` open the `Alpha` folder and select `BlockAppsSDK.dll` and click `Open`.
+![find_dll](https://github.com/blockapps/xamarin-sdk/blob/master/images/dll_location.png?raw=true)
+
+This will add the .dll file to the project references.
+You may need to refresh the Solution Explorer to see the changes.
+
+**Workaround 2:** If you try to run you're project and get this error:
+`Could not load file or assembly 'System.Net.Http, Version=1.5.0.0` the following steps
+will resolve the problem:
+
+Expand `References` and right click on `System.Net.Http`. If `Local Copy` is not
+checked, select it to check it.
+
+![system.net](https://github.com/blockapps/xamarin-sdk/blob/master/images/systemnethttp.png?raw=true)
+
 
 BlockAppsSDK for Xamarin is in alpha stage and may contain bugs. If you do find
 any please visit the
