@@ -70,22 +70,29 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod6()
         {
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
-            var userTask = User.GetUser("charlie", "test");
-            var file =
-                "contract Task11 { /** * It is helpful to think of * smart contracts as state machine. * In this example: * State 1: Deploy new smart task contract * State 2: Set task name and reward * State 3: Task Completed * State 4: Task Deleted */ address owner; address completedBy; uint taskReward; string stateMessage; uint stateInt; string taskName; string taskDescription; function Task() { owner = msg.sender; stateMessage = \"Task uploaded\"; stateInt = 1; } /** * Set the details specific to this task */ function setUpTaskDetails(uint reward, string name, string description) returns (string){ if(reward >= ((this.balance + msg.value) / 1000000000000000000)) { msg.sender.send(msg.value); return \"Not enough ether sent as reward\"; } taskReward = reward; stateMessage = \"Task details set\"; taskName = name; taskDescription = description; stateInt = 2; return stateMessage; } /** * Complete the task contract */ function completeTask() returns (string){ completedBy = msg.sender; completedBy.send(taskReward * 1 ether); stateInt = 3; stateMessage = \"Task successfully completed\"; return stateMessage; } function deleteTask() returns (string){ owner.send(this.balance); stateInt = 4; stateMessage = \"Deleted Task\"; return stateMessage; } }";
-            
-            var user = await userTask;
-            var contractTask = Contract.DeployContract(file, "Task11", user, user.Accounts[0]);
-            //var contractTask = Contract.GetContract("Task1");
-            //var user = await userTask;
-            var contract = await contractTask;
-            var args = new Dictionary<string,string>();
-            args.Add("reward","10");
-            args.Add("name","Book surf trip");
-            args.Add("description","John and I must go surf");
-            //args = null;
-            var resp = await contract.CallMethod("setUpTaskDetails", args, user, user.Accounts[0].Address, 1);
+            ConnectionString.BlocUrl = "http://13.91.95.100:8000";
+            ConnectionString.StratoUrl = "http://13.91.95.100/eth/v1.2/";
+
+            var user = await User.CreateUser("charlie", "test");
+            if (user == null)
+            {
+                user = await User.GetUser("charlie", "test");
+            }
+            //var file =
+            //    "contract Task { /** * It is helpful to think of * smart contracts as state machine. * In this example: * State 1: Deploy new smart task contract * State 2: Set task name and reward * State 3: Task Completed * State 4: Task Deleted */ address owner; address completedBy; uint taskReward; string stateMessage; uint stateInt; string taskName; string taskDescription; function Task() { owner = msg.sender; stateMessage = \"Task uploaded\"; stateInt = 1; } /** * Set the details specific to this task */ function setUpTaskDetails(uint reward, string name, string description) returns (string){ if(reward >= ((this.balance + msg.value) / 1000000000000000000)) { msg.sender.send(msg.value); return \"Not enough ether sent as reward\"; } taskReward = reward; stateMessage = \"Task details set\"; taskName = name; taskDescription = description; stateInt = 2; return stateMessage; } /** * Complete the task contract */ function completeTask() returns (string){ completedBy = msg.sender; completedBy.send(taskReward * 1 ether); stateInt = 3; stateMessage = \"Task successfully completed\"; return stateMessage; } function deleteTask() returns (string){ owner.send(this.balance); stateInt = 4; stateMessage = \"Deleted Task\"; return stateMessage; } }";
+
+            //var contractTask = Contract.DeployContract(file, "Task", user, user.Accounts[0]);
+            ////var contractTask = Contract.GetContract("Task1");
+            ////var user = await userTask;
+            //var contract = await contractTask;
+            //var args = new Dictionary<string,string>();
+            //args.Add("reward","10");
+            //args.Add("name","Book surf trip");
+            //args.Add("description","John and I must go surf");
+            ////args = null;
+            //var resp = await contract.CallMethod("setUpTaskDetails", args, user, user.Accounts[0].Address, 1);
+
+            //var taskContracts = await Contract.GetContractsWithName("Task");
 
             var x = "sup";
 
@@ -134,12 +141,14 @@ namespace BlockAppsSDKTest
             //====================//
             ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
             var userTask = User.GetUser("testUser", "securePassword");
+            //var contractString =
+            //    "contract SimpleStorage4 { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
             var contractString =
-                "contract SimpleStorage4 { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
+                "contract Task { /** * It is helpful to think of * smart contracts as state machine. * In this example: * State 1: Deploy new smart task contract * State 2: Set task name and reward * State 3: Task Completed * State 4: Task Deleted */ address owner; address completedBy; uint taskReward; string stateMessage; uint stateInt; string taskName; string taskDescription; function Task() { owner = msg.sender; stateMessage = \"Task uploaded\"; stateInt = 1; } /** * Set the details specific to this task */ function setUpTaskDetails(uint reward, string name, string description) returns (string){ if(reward >= ((this.balance + msg.value) / 1000000000000000000)) { msg.sender.send(msg.value); return \"Not enough ether sent as reward\"; } taskReward = reward; stateMessage = \"Task details set\"; taskName = name; taskDescription = description; stateInt = 2; return stateMessage; } /** * Complete the task contract */ function completeTask() returns (string){ completedBy = msg.sender; completedBy.send(taskReward * 1 ether); stateInt = 3; stateMessage = \"Task successfully completed\"; return stateMessage; } function deleteTask() returns (string){ owner.send(this.balance); stateInt = 4; stateMessage = \"Deleted Task\"; return stateMessage; } }"; ;
 
 
             var user = await userTask;
-            var contractTask = Contract.DeployContract(contractString, "SimpleStorage4", user, user.Accounts[0]);
+            var contractTask = Contract.DeployContract(contractString, "Task", user, user.Accounts[0]);
             var contract = await contractTask;
             Console.WriteLine("The value of storedData is: " + contract.Properties["storedData"]);
             var args = new Dictionary<string, string>();

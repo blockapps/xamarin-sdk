@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BlockAppsSDK.Users;
 using Newtonsoft.Json;
@@ -30,7 +31,7 @@ namespace BlockAppsSDK.Contracts
         }
 
         //Methods
-        public async Task<string> CallMethod(string methodName, Dictionary<string,string> args, User user, string userAddress, int value)
+        public async Task<string> CallMethod(string methodName, Dictionary<string,string> args, User user, string userAddress, double value)
         {
             var url = ConnectionString.BlocUrl + "/users/" + user.Name + "/" + userAddress + "/contract/" + this.Name + "/" + this.Address + "/call";
             var postData = "{}";
@@ -88,11 +89,13 @@ namespace BlockAppsSDK.Contracts
 
         public static async Task<string[]> GetContractAddresses(string name)
         {
+            var hexPatter = @"^[0-9A-Fa-f]+$";
             var url = ConnectionString.BlocUrl + "/contracts/" + name;
             var responseContent = await Utils.GET(url);
-            var contractState = JsonConvert.DeserializeObject<string[]>(responseContent);
 
-            return contractState;
+            var addresses = JsonConvert.DeserializeObject<string[]>(responseContent).Where(x => Regex.IsMatch(x,hexPatter)).ToArray();
+       
+            return addresses;
         }
 
         public static async Task<Contract> GetContract(string contractName, string address)

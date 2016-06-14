@@ -29,10 +29,6 @@ namespace BlockAppsSDK.Users
             throw new NotImplementedException();
         }
 
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
 
         //Static Methods
         public static async Task<Account> GetAccount(string address)
@@ -57,8 +53,13 @@ namespace BlockAppsSDK.Users
         {
             var addresses = JsonConvert.DeserializeObject<string[]>(await Utils.GET(ConnectionString.BlocUrl + "/users/" + username));
             List<Task<string>> accountTasks = (from address in addresses
-                                               select Utils.GET(ConnectionString.StratoUrl + "account?address=" + address)).ToList();
+                                               select Utils.GET(ConnectionString.StratoUrl + "/account?address=" + address)).ToList();
             List<string> accountJsonList = (await Task.WhenAll(accountTasks)).ToList();
+
+            if (accountJsonList.Count < 1)
+            {
+                return null;
+            }
 
             return accountJsonList.Select(x => JsonConvert.DeserializeObject<Account[]>(x)[0]).ToList();
         }
