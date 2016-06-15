@@ -123,28 +123,30 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod9()
         {
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            ConnectionString.BlocUrl = "http://xamarin.centralus.cloudapp.azure.com:8000";
 
             //BlockApps strato dev instance
-            ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
-            var testUser = await User.CreateUser("testUser", "securePassword");
-            if (testUser == null)
-            {
-                Console.WriteLine("User already exists, add an account through the Account class.");
-            }
-            else
-            {
-                Console.WriteLine(testUser.Name + " has account:" + testUser.Accounts[0].Address + " with balance: " + testUser.Accounts[0].Balance);
-            }
+            //ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
+            //var testUser = await User.CreateUser("testUser", "securePassword");
+            //if (testUser == null)
+            //{
+            //    Console.WriteLine("User already exists, add an account through the Account class.");
+            //}
+            //else
+            //{
+            //    Console.WriteLine(testUser.Name + " has account:" + testUser.Accounts[0].Address + " with balance: " + testUser.Accounts[0].Balance);
+            //}
 
 
             //====================//
-            ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
-            var userTask = User.GetUser("testUser", "securePassword");
+            ConnectionString.StratoUrl = "http://xamarin.centralus.cloudapp.azure.com/eth/v1.2";
+            //var userTask = User.GetUser("testUser", "securePassword");
+            var userTask = User.GetUser("charlie", "test");
             //var contractString =
             //    "contract SimpleStorage4 { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
             var contractString =
                 "contract Task { /** * It is helpful to think of * smart contracts as state machine. * In this example: * State 1: Deploy new smart task contract * State 2: Set task name and reward * State 3: Task Completed * State 4: Task Deleted */ address owner; address completedBy; uint taskReward; string stateMessage; uint stateInt; string taskName; string taskDescription; function Task() { owner = msg.sender; stateMessage = \"Task uploaded\"; stateInt = 1; } /** * Set the details specific to this task */ function setUpTaskDetails(uint reward, string name, string description) returns (string){ if(reward >= ((this.balance + msg.value) / 1000000000000000000)) { msg.sender.send(msg.value); return \"Not enough ether sent as reward\"; } taskReward = reward; stateMessage = \"Task details set\"; taskName = name; taskDescription = description; stateInt = 2; return stateMessage; } /** * Complete the task contract */ function completeTask() returns (string){ completedBy = msg.sender; completedBy.send(taskReward * 1 ether); stateInt = 3; stateMessage = \"Task successfully completed\"; return stateMessage; } function deleteTask() returns (string){ owner.send(this.balance); stateInt = 4; stateMessage = \"Deleted Task\"; return stateMessage; } }"; ;
+            //"contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
 
 
             var user = await userTask;
