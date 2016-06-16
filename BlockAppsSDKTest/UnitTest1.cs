@@ -22,7 +22,7 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod2()
         {
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            BlockAppsClient.BlocUrl = "http://13.93.154.77:8000";
             var account = await Account.GetAccountAddresses();
             var accounts = await Account.GetAccounts("admin");
             var x = "sup";
@@ -31,7 +31,7 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod3()
         {
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            BlockAppsClient.BlocUrl = "http://13.93.154.77:8000";
             var newAccount = await Account.CreateAccount("testMethod3", "asdf", true);
             var x = "sup";
             
@@ -40,7 +40,7 @@ namespace BlockAppsSDKTest
         //[TestMethod]
         //public async Task TestMethod4()
         //{
-        //    ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+        //    BlockAppsClient.BlocUrl = "http://13.93.154.77:8000";
         //    var contractAddress = await Contract.GetContractAddress("SimpleStorage");
         //    var contractState = await Contract.GetContractState(address: "a4f5503c2e3f32bc567c1e654f6d69fec71f46ef", name: "SimpleStorage");
         //    var contract = await Contract.GetContract("SimpleStorage");
@@ -52,7 +52,7 @@ namespace BlockAppsSDKTest
         //[TestMethod]
         //public async Task TestMethod5()
         //{
-            //ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            //BlockAppsClient.BlocUrl = "http://13.93.154.77:8000";
             //var userTask = User.GetUser("charlie", "test");
             //var contractTask = Contract.GetContract("SimpleStorage");
 
@@ -70,8 +70,8 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod6()
         {
-            ConnectionString.BlocUrl = "http://13.91.95.100:8000";
-            ConnectionString.StratoUrl = "http://13.91.95.100/eth/v1.2/";
+            BlockAppsClient.BlocUrl = "http://13.91.95.100:8000";
+            BlockAppsClient.StratoUrl = "http://13.91.95.100/eth/v1.2/";
 
             var user = await User.CreateUser("charlie", "test");
             if (user == null)
@@ -102,7 +102,7 @@ namespace BlockAppsSDKTest
         public async Task TestMethod7()
         {
             
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
+            BlockAppsClient.BlocUrl = "http://13.93.154.77:8000";
             var contractsTask = Contract.GetContractsWithName("Task11");
             var resp = await contractsTask;
 
@@ -112,8 +112,8 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod8()
         {
-            ConnectionString.StratoUrl = "http://xamarintest.centralus.cloudapp.azure.com/strato-single/eth/v1.1/";
-            ConnectionString.BlocUrl = "http://xamarintest.centralus.cloudapp.azure.com:8000";
+            BlockAppsClient.StratoUrl = "http://xamarintest.centralus.cloudapp.azure.com/strato-single/eth/v1.1/";
+            BlockAppsClient.BlocUrl = "http://xamarintest.centralus.cloudapp.azure.com:8000";
             var charlie = await User.GetUser("charlie", "test");
             Assert.AreSame(charlie.Name,"charlie");
             Assert.AreSame(charlie.Password,"test");
@@ -123,10 +123,10 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task TestMethod9()
         {
-            ConnectionString.BlocUrl = "http://xamarin.centralus.cloudapp.azure.com:8000";
+            BlockAppsClient.BlocUrl = "http://xamarin.centralus.cloudapp.azure.com:8000";
 
             //BlockApps strato dev instance
-            //ConnectionString.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
+            //BlockAppsClient.StratoUrl = "http://strato-dev3.blockapps.net/eth/v1.1/";
             //var testUser = await User.CreateUser("testUser", "securePassword");
             //if (testUser == null)
             //{
@@ -139,7 +139,7 @@ namespace BlockAppsSDKTest
 
 
             //====================//
-            ConnectionString.StratoUrl = "http://xamarin.centralus.cloudapp.azure.com/eth/v1.2";
+            BlockAppsClient.StratoUrl = "http://xamarin.centralus.cloudapp.azure.com/eth/v1.2";
             //var userTask = User.GetUser("testUser", "securePassword");
             var userTask = User.GetUser("charlie", "test");
             //var contractString =
