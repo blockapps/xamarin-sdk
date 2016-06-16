@@ -16,16 +16,7 @@ namespace BlockAppsSDK.Blocks
         public List<ReceiptTransaction> ReceiptTransactions { get; set; }
         public BlockData BlockData { get; set; }
 
-        public static async Task<Block> GetBlock(uint blockNumber)
-        {
-            var url = ConnectionString.StratoUrl + "/block?number=" + blockNumber;
-            var blocks = JsonConvert.DeserializeObject<List<Block>>(await Utils.GET(url));
-            if (blocks.Count < 1)
-            {
-                return null;
-            }
-            return blocks[0];
-        }
+        
     }
 
     public class ReceiptTransaction
