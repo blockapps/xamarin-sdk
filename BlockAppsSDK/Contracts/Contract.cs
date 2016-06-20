@@ -19,8 +19,11 @@ namespace BlockAppsSDK.Contracts
         
         public Dictionary<string,string> Properties { get; set; }
 
+
         //Constructor
-        public Contract(Account account)
+
+        
+        public Contract(Account account) : base(account.Connection)
         {
             ContractRoot = account.ContractRoot;
             Kind = account.Kind;
@@ -33,7 +36,7 @@ namespace BlockAppsSDK.Contracts
         //Methods
         public async Task<string> CallMethod(string methodName, Dictionary<string,string> args, User user, string userAddress, double value)
         {
-            var url = BlockAppsClient.BlocUrl + "/users/" + user.Name + "/" + userAddress + "/contract/" + this.Name + "/" + this.Address + "/call";
+            var url = Connection.BlocUrl + "/users/" + user.Name + "/" + userAddress + "/contract/" + this.Name + "/" + this.Address + "/call";
             var postData = "{}";
             if (args != null)
             {
@@ -47,7 +50,7 @@ namespace BlockAppsSDK.Contracts
 
         public async Task<bool> Refresh()
         {
-            var stateTask = GetContractState(Address, Name);
+            var stateTask = GetContractState(Address);
             var state = await stateTask;
             if (state == null)
             {
@@ -71,6 +74,14 @@ namespace BlockAppsSDK.Contracts
             return true;
         }
 
+        private async Task<Dictionary<string, string>> GetContractState(string address)
+        {
+            var url = Connection.BlocUrl + "/contracts/" + Name + "/" + address + "/state";
+            var responseContent = await Utils.GET(url);
+            var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
+
+            return contractState;
+        }
 
     }
 

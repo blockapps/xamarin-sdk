@@ -15,6 +15,7 @@ namespace BlockAppsSDK.Users
         {
             AccountManager = accountManager;
         } 
+
         public async Task<User> CreateUser(string name, string password)
         {
             var users = await GetAllUserNames();
@@ -41,6 +42,8 @@ namespace BlockAppsSDK.Users
                 Accounts = await AccountManager.GetAccounts(name)
             };
         }
+
+        
 
         public async Task<List<string>> GetAllUserNames()
         {

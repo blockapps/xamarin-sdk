@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using BlockAppsSDK.Blocks;
+using BlockAppsSDK.Contracts;
+using BlockAppsSDK.Users;
 using Xamarin.Forms;
 
 namespace BlockAppsSDK
@@ -11,18 +13,26 @@ namespace BlockAppsSDK
     {
         public Connection Connection { get; set; }
 
+        public AccountManager AccountManager { get; private set; }
+        public ContractManager ContractManager { get; private set; }
+        public UserManager UserManager { get; private set; }
+        public BlockManager BlockManager { get; private set; }
+
+
         public BlockAppsClient(string blocUrl, string stratoUrl)
-            : this(new Connection(blocUrl,stratoUrl))
+            : this(new Connection(blocUrl, stratoUrl))
         {
         }
 
         public BlockAppsClient(Connection connection)
         {
             Connection = connection;
+            AccountManager = new AccountManager(connection);
+            ContractManager = new ContractManager(connection);
+            UserManager = new UserManager(AccountManager);
+            BlockManager = new BlockManager(connection);
         }
-
-
     }
 
-    
+
 }
