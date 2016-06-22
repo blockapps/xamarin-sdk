@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BlockAppsSDK.Users;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BlockAppsSDK.Contracts
 {
@@ -17,16 +18,18 @@ namespace BlockAppsSDK.Contracts
         {
         }
 
-        public async Task<Contract> DeployContract(string src, string contractName, User user, Account account)
+        public async Task<Contract> CreateContract(string src, string contractName, string username, string password, string address)
         {
-            var url = Connection.BlocUrl + "/users/" + user.Name + "/" + account.Address + "/contract";
+            var url = Connection.BlocUrl + "/users/" + username + "/" + address + "/contract";
+            var postData = "{}";
 
-            var postModel = new DeployContractModel
-            {
-                password = user.Password,
-                src = src
-            };
-            var serializedModel = JsonConvert.SerializeObject(postModel);
+            postData = new JObject(new JProperty("password", password), new JProperty("src", src)).ToString();
+            //var postModel = new DeployContractModel
+            //{
+            //    password = user.Password,
+            //    src = src
+            //};
+            var serializedModel = JsonConvert.SerializeObject(postData);
             var responseContent = await Utils.POST(url, serializedModel);
             return await GetContract(contractName, responseContent);
 
@@ -47,7 +50,7 @@ namespace BlockAppsSDK.Contracts
         public async Task<Contract> GetContract(string contractName, string address)
         {
             var contractTask = GetAccount(address);
-            var stateTask = GetContractState(address, contractName);
+            //var stateTask = GetContractState(address, contractName);
 
             var account = await contractTask;
 
@@ -58,20 +61,11 @@ namespace BlockAppsSDK.Contracts
                 Properties = new Dictionary<string, string>()
             };
 
-            var state = await stateTask;
-            foreach (var keyValuePair in state)
-            {
-                if (keyValuePair.Value.Contains("function"))
-                {
-                    contract.Methods.Add(keyValuePair.Key);
-                }
-                else
-                {
-                    contract.Properties.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
+            await contract.Refresh();
+            
             return contract;
         }
+
         public async Task<List<Contract>> GetContractsWithName(string contractName)
         {
             var addresses = await GetContractAddresses(contractName);
@@ -80,14 +74,7 @@ namespace BlockAppsSDK.Contracts
 
             return (await Task.WhenAll(contractsTask)).ToList();
         }
+        
 
-        public async Task<Dictionary<string, string>> GetContractState(string address, string name)
-        {
-            var url = Connection.BlocUrl + "/contracts/" + name + "/" + address + "/state";
-            var responseContent = await Utils.GET(url);
-            var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
-
-            return contractState;
-        }
     }
 }

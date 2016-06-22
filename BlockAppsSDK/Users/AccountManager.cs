@@ -4,18 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BlockAppsSDK.Users
 {
     public class AccountManager
     {
-         public Connection Connection { get; private set; }
+        public Connection Connection { get; }
 
         public AccountManager(Connection connection)
         {
             Connection = connection;
         }
 
+        /// <summary>
+        /// Get a specific Account using it's address. No association with a specific user.
+        /// </summary>
+        /// <param name="address">
+        /// The address associated with an account on the blockchain.
+        /// </param>
         public async Task<Account> GetAccount(string address)
         {
             if (address == null || address.Equals(""))
@@ -66,12 +73,16 @@ namespace BlockAppsSDK.Users
                 throw new ArgumentException("Name is null or empty", nameof(name));
             }
             var url = Connection.BlocUrl + "/users/" + name;
-            var postModel = new PostNewUserModel
-            {
-                password = password,
-                faucet = faucet ? "1" : "0"
-            };
-            var serializedModel = JsonConvert.SerializeObject(postModel);
+            //var postModel = new PostNewUserModel
+            //{
+            //    password = password,
+            //    faucet = faucet ? "1" : "0"
+            //};
+            var faucetValue = faucet ? "1" : "0";
+            var postData = "{}";
+
+            postData = new JObject(new JProperty("password", password), new JProperty("faucet", faucetValue)).ToString();
+            var serializedModel = JsonConvert.SerializeObject(postData);
             var userAddress = await Utils.POST(url, serializedModel);
             return await GetAccount(userAddress);
         }

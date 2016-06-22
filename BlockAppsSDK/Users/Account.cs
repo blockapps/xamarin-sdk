@@ -23,6 +23,14 @@ namespace BlockAppsSDK.Users
 
         public string LatestBlockId { get; set; }
 
+        internal Connection Connection { get; set; }
+
+        //Constructor
+        internal Account(Connection connection)
+        {
+            Connection = connection;
+        }
+
         //Methods
         public bool Send(string address, uint value, string user)
         {
@@ -30,7 +38,6 @@ namespace BlockAppsSDK.Users
         }
 
 
-        //Static Methods
        
     }
 

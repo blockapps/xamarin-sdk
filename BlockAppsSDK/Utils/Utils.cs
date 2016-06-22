@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace BlockAppsSDK
 {
-    public static class Utils
+    internal static class Utils
     {
         public static async Task<string> GET(string url)
         {

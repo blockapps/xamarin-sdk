@@ -50,6 +50,8 @@
     <Compile Include="Connection.cs" />
     <Compile Include="Contracts\Contract.cs" />
     <Compile Include="Contracts\ContractManager.cs" />
+    <Compile Include="Contracts\UserContract.cs" />
+    <Compile Include="Contracts\UserContractManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Users\Account.cs" />
     <Compile Include="Users\AccountManager.cs" />

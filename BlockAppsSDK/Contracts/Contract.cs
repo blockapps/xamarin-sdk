@@ -20,6 +20,7 @@ namespace BlockAppsSDK.Contracts
         public Dictionary<string,string> Properties { get; set; }
 
 
+
         //Constructor
 
         
@@ -34,13 +35,13 @@ namespace BlockAppsSDK.Contracts
         }
 
         //Methods
-        public async Task<string> CallMethod(string methodName, Dictionary<string,string> args, User user, string userAddress, double value)
+        public async Task<string> CallMethod(string methodName, Dictionary<string,string> args, string username, string password, string userAddress, double value)
         {
-            var url = Connection.BlocUrl + "/users/" + user.Name + "/" + userAddress + "/contract/" + this.Name + "/" + this.Address + "/call";
+            var url = Connection.BlocUrl + "/users/" + username + "/" + userAddress + "/contract/" + this.Name + "/" + this.Address + "/call";
             var postData = "{}";
             if (args != null)
             {
-                postData = new JObject(new JProperty("password", user.Password), new JProperty("method", methodName),
+                postData = new JObject(new JProperty("password", password), new JProperty("method", methodName),
                     new JProperty("args", JObject.FromObject(args)), new JProperty("value", value)).ToString();
             }
 

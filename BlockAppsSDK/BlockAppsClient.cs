@@ -27,9 +27,7 @@ namespace BlockAppsSDK
         public BlockAppsClient(Connection connection)
         {
             Connection = connection;
-            AccountManager = new AccountManager(connection);
-            ContractManager = new ContractManager(connection);
-            UserManager = new UserManager(AccountManager);
+            UserManager = new UserManager(connection);
             BlockManager = new BlockManager(connection);
         }
     }

@@ -9,11 +9,10 @@ namespace BlockAppsSDK.Users
 {
     public class UserManager
     {
-        private AccountManager AccountManager { get; set; }
-
-        public UserManager(AccountManager accountManager)
+        public Connection Connection { get; }
+        public UserManager(Connection connection)
         {
-            AccountManager = accountManager;
+            Connection = connection;
         } 
 
         public async Task<User> CreateUser(string name, string password)
@@ -23,31 +22,27 @@ namespace BlockAppsSDK.Users
             {
                 return null;
             }
-            var newUser = new User
-            {
-                Name = name,
-                Password = password,
-                Accounts = new List<Account>()
-            };
-            newUser.Accounts.Add(await AccountManager.CreateAccount(name, password, true));
+            var newUser = new User(Connection, name, password);
+            var accountAddress = await newUser.AddNewAccount();
+
+            newUser.DefaultAccount = accountAddress;
+
             return newUser;
         }
 
         public async Task<User> GetUser(string name, string password)
         {
-            return new User
-            {
-                Name = name,
-                Password = password,
-                Accounts = await AccountManager.GetAccounts(name)
-            };
-        }
+            var user = new User(Connection, name, password);
 
-        
+            await user.PopulateAccounts();
+            user.DefaultAccount = user.Accounts.FirstOrDefault().Key;
+
+            return user;
+        }
 
         public async Task<List<string>> GetAllUserNames()
         {
-            var res = await Utils.GET(AccountManager.Connection.BlocUrl + "/users");
+            var res = await Utils.GET(Connection.BlocUrl + "/users");
             return JsonConvert.DeserializeObject<List<string>>(res);
         }
 
