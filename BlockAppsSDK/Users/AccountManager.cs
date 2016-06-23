@@ -33,7 +33,9 @@ namespace BlockAppsSDK.Users
             var accountList = JsonConvert.DeserializeObject<List<Account>>(await Utils.GET(url));
             if (accountList.Count > 0)
             {
-                return accountList.First();
+                var account =  accountList.First();
+                account.Connection = Connection;
+                return account;
             }
             else
             {
@@ -53,7 +55,12 @@ namespace BlockAppsSDK.Users
                 return null;
             }
 
-            return accountJsonList.Select(x => JsonConvert.DeserializeObject<Account[]>(x)[0]).ToList();
+            var accounts = accountJsonList.Select(x => JsonConvert.DeserializeObject<Account[]>(x)[0]).ToList();
+            foreach (var account in accounts)
+            {
+                account.Connection = Connection;
+            }
+            return accounts;
         }
 
         public async Task<List<string>> GetAccountAddresses()

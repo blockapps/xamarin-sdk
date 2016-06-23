@@ -29,8 +29,8 @@ namespace BlockAppsSDK.Contracts
             //    password = user.Password,
             //    src = src
             //};
-            var serializedModel = JsonConvert.SerializeObject(postData);
-            var responseContent = await Utils.POST(url, serializedModel);
+            //var serializedModel = JsonConvert.SerializeObject(postData);
+            var responseContent = await Utils.POST(url, postData);
             return await GetContract(contractName, responseContent);
 
             
@@ -43,7 +43,7 @@ namespace BlockAppsSDK.Contracts
             var responseContent = await Utils.GET(url);
 
             var addresses = JsonConvert.DeserializeObject<string[]>(responseContent).Where(x => Regex.IsMatch(x,hexPatter)).ToArray();
-       
+
             return addresses;
         }
 
@@ -69,6 +69,11 @@ namespace BlockAppsSDK.Contracts
         public async Task<List<Contract>> GetContractsWithName(string contractName)
         {
             var addresses = await GetContractAddresses(contractName);
+
+            if (addresses.Length < 1)
+            {
+                return null;
+            }
 
             var contractsTask = addresses.Select(async address => await GetContract(contractName, address)).ToList();
 

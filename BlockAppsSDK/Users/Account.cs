@@ -23,10 +23,12 @@ namespace BlockAppsSDK.Users
 
         public string LatestBlockId { get; set; }
 
-        internal Connection Connection { get; set; }
+        public Connection Connection { get; set; }
 
         //Constructor
-        internal Account(Connection connection)
+        public Account() { }
+
+        public Account(Connection connection)
         {
             Connection = connection;
         }

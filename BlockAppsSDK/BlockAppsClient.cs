@@ -13,8 +13,6 @@ namespace BlockAppsSDK
     {
         public Connection Connection { get; set; }
 
-        public AccountManager AccountManager { get; private set; }
-        public ContractManager ContractManager { get; private set; }
         public UserManager UserManager { get; private set; }
         public BlockManager BlockManager { get; private set; }
 
@@ -26,6 +24,7 @@ namespace BlockAppsSDK
 
         public BlockAppsClient(Connection connection)
         {
+
             Connection = connection;
             UserManager = new UserManager(connection);
             BlockManager = new BlockManager(connection);

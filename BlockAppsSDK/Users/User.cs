@@ -37,8 +37,6 @@ namespace BlockAppsSDK.Users
             };
         }
 
-
-
         public async Task<string> AddNewAccount()
         {
             var newAccount = await AccountManager.CreateAccount(Name, Password, true);

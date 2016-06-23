@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -78,10 +79,19 @@ namespace BlockAppsSDK.Contracts
         private async Task<Dictionary<string, string>> GetContractState(string address)
         {
             var url = Connection.BlocUrl + "/contracts/" + Name + "/" + address + "/state";
-            var responseContent = await Utils.GET(url);
-            var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
+            try
+            {
+                var responseContent = await Utils.GET(url);
+                var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
 
-            return contractState;
+                return contractState;
+            }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
+
+           
         }
 
     }
