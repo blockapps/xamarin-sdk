@@ -26,7 +26,7 @@ namespace BlockAppsSDKTest.Contracts
         }
 
         [TestMethod]
-        public async Task CanAllContractAddressesWithName()
+        public async Task CanGetAllContractAddressesWithName()
         {
             var contractAddresses = await ContractManager.GetContractAddresses("SimpleStorage");
             var noContractAddresses = await ContractManager.GetContractAddresses("SimpleStorageWrong");
@@ -46,7 +46,7 @@ namespace BlockAppsSDKTest.Contracts
         }
 
         [TestMethod]
-        public async Task CanGetAContract()
+        public async Task CanGetAContractWithAddress()
         {
             var contractAddresses = await ContractManager.GetContractAddresses("SimpleStorage");
             Assert.IsTrue(contractAddresses.Length > 0);
@@ -74,14 +74,30 @@ namespace BlockAppsSDKTest.Contracts
             Assert.IsTrue(contractAddresses.Length > 0);
             var SimpleStorage = await ContractManager.GetContract("SimpleStorage",
                 contractAddresses[0]);
+            Assert.IsNotNull(SimpleStorage);
+            string resp = null;
             var args = new Dictionary<string, string>();
-            args.Add("x", "1");
-            var resp = await SimpleStorage.CallMethod("set", args, "charlie", "test", 
-                "219e43441e184f16fb0386afd3aed1e780632042", 3);
-            Console.WriteLine(resp);
-            Assert.AreSame(SimpleStorage.Properties["storedData"],"0");
-            await SimpleStorage.Refresh();
-            Assert.AreSame(SimpleStorage.Properties["storedData"],"3");
+            if (SimpleStorage.Properties["storedData"].Equals("1"))
+            {
+                args.Add("x", "0");
+                resp = await SimpleStorage.CallMethod("set", args, "charlie", "test",
+                    "219e43441e184f16fb0386afd3aed1e780632042", 3);
+                Console.WriteLine(resp);
+                await SimpleStorage.Refresh();
+                Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
+            }
+            else
+            {
+                args.Add("x", "1");
+                resp = await SimpleStorage.CallMethod("set", args, "charlie", "test",
+                 "219e43441e184f16fb0386afd3aed1e780632042", 3);
+                Console.WriteLine(resp);
+                Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
+                await SimpleStorage.Refresh();
+                Assert.AreEqual(SimpleStorage.Properties["storedData"], "1");
+            }
+            
+            
         }
 
 

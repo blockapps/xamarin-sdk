@@ -19,21 +19,11 @@ namespace BlockAppsSDK.Blocks
         
     }
 
-    public class ReceiptTransaction
+    public class ReceiptTransaction : Transaction
     {
         public string TransactionType { get; set; }
-        public string Hash { get; set; }
-        public int GasLimit { get; set; }
         public string Kind { get; set; }
-        public string Data { get; set; }
-        public int GasPrice { get; set; }
-        public string To { get; set; }
-        public int Value { get; set; }
-        public string From { get; set; }
-        public string r { get; set; }
-        public string s { get; set; }
-        public string v { get; set; }
-        public int Nonce { get; set; }
+        public string Init { get; set; }
     }
 
     public class BlockData
@@ -54,5 +44,23 @@ namespace BlockAppsSDK.Blocks
         public string StateRoot { get; set; }
         public string TransactionsRoot { get; set; }
     }
+
+    public class Transaction
+    {
+        public string Hash { get; set; }
+        public int GasLimit { get; set; }
+        public string Data { get; set; }
+        public int GasPrice { get; set; }
+        public string CodeOrData { get; set; }
+        public string To { get; set; }
+        public int Value { get; set; }
+        public string From { get; set; }
+        public string r { get; set; }
+        public string s { get; set; }
+        public string v { get; set; }
+        public int Nonce { get; set; }
+    }
+
+    
 
 }

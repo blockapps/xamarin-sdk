@@ -23,8 +23,8 @@
 //        public async Task TestMethod2()
 //        {
 //            BlockAppsClient.BlocUrl = "http://13.93.154.77:8000";
-//            var account = await Account.GetAccountAddresses();
-//            var accounts = await Account.GetAccounts("admin");
+//            var account = await Account.GetAccountAddressesForAllUsers();
+//            var accounts = await Account.GetAccountsForUser("admin");
 //            var x = "sup";
 //        }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,7 +44,7 @@ namespace BlockAppsSDK.Users
             }
         }
 
-        public async Task<List<Account>> GetAccounts(string username)
+        public async Task<List<Account>> GetAccountsForUser(string username)
         {
             var addresses = JsonConvert.DeserializeObject<string[]>(await Utils.GET(Connection.BlocUrl + "/users/" + username));
             List<Task<string>> accountTasks = (from address in addresses
@@ -63,14 +64,21 @@ namespace BlockAppsSDK.Users
             return accounts;
         }
 
-        public async Task<List<string>> GetAccountAddresses()
+        public async Task<Dictionary<string, List<string>>> GetAccountAddressesForAllUsers()
         {
             var res = await Utils.GET(Connection.BlocUrl + "/users");
             var users = JsonConvert.DeserializeObject<List<string>>(res);
+            if (users.Count < 1)
+            {
+                return null;
+            }
             //List<Task<string>> userTasks = (from user in users
             //                                   select Utils.GET(Connection.BlocUrl + "/users/" + user)).ToList();
-            List<Task<string>> userTasks = users.Select(async user => JsonConvert.DeserializeObject<string>(await Utils.GET(Connection.BlocUrl + "/users/" + user))).ToList();
-            return (await Task.WhenAll(userTasks)).ToList();
+            List<Task<KeyValuePair<string,List<string>>>> userTasks = users.Select(async user => new KeyValuePair<string,List<string>>(user,JsonConvert.DeserializeObject<List<string>>(await Utils.GET(Connection.BlocUrl + "/users/" + user)))).ToList();
+            var userAddresses =  (await Task.WhenAll(userTasks)).ToList();
+            return userAddresses.ToDictionary(x => x.Key, x => x.Value);
+
+
         }
 
         public async Task<Account> CreateAccount(string name, string password, bool faucet)
@@ -89,8 +97,7 @@ namespace BlockAppsSDK.Users
             var postData = "{}";
 
             postData = new JObject(new JProperty("password", password), new JProperty("faucet", faucetValue)).ToString();
-            var serializedModel = JsonConvert.SerializeObject(postData);
-            var userAddress = await Utils.POST(url, serializedModel);
+            var userAddress = await Utils.POST(url, postData);
             return await GetAccount(userAddress);
         }
     }

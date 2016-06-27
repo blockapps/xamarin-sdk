@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlockAppsSDK.Blocks;
 using Newtonsoft.Json;
 using BlockAppsSDK.Contracts;
 
@@ -30,13 +31,14 @@ namespace BlockAppsSDK.Users
             Name = name;
             Password = password;
             AccountManager = new AccountManager(connection);
-            UserContractManager = new UserContractManager(connection)
+            UserContractManager = new BoundContractManager(connection)
             {
                 Password = password,
                 Username = name 
             };
         }
 
+        //Methods
         public async Task<string> AddNewAccount()
         {
             var newAccount = await AccountManager.CreateAccount(Name, Password, true);
@@ -46,11 +48,26 @@ namespace BlockAppsSDK.Users
 
         public async Task PopulateAccounts()
         {
-            var accounts = await AccountManager.GetAccounts(Name);
+            var accounts = await AccountManager.GetAccountsForUser(Name);
             Accounts = accounts.ToDictionary(x => x.Address);
             return;
         }
 
+        public async Task<AccountTransaction> Send(string toAddress, uint value)
+        {
+            var transaction = await Accounts[DefaultAccount].Send(toAddress, value, Name, Password);
+            return transaction;
+        }
+
+        public async Task<AccountTransaction> Send(string toAddress, string fromAddress, uint value)
+        {
+            if (Accounts.ContainsKey(fromAddress))
+            {
+                var transaction = await Accounts[fromAddress].Send(toAddress, value, Name, Password);
+                return transaction;
+            }
+            return null;
+        }
     }
 
 

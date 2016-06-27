@@ -15,7 +15,7 @@ namespace BlockAppsSDKTest.Blocks
         [TestMethod]
         public async Task GetBlock()
         {
-            var block0 = await BlockManager.GetBlock(0);
+            var block0 = await BlockManager.GetBlock(1);
             Console.WriteLine("Block 0 has Parent Hash: " + block0.BlockData.ParentHash);
         }
 
