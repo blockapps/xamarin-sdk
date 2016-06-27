@@ -41,6 +41,10 @@ namespace BlockAppsSDK.Users
         //Methods
         public async Task<string> AddNewAccount()
         {
+            if (Accounts == null)
+            {
+                Accounts = new Dictionary<string, Account>();
+            }
             var newAccount = await AccountManager.CreateAccount(Name, Password, true);
             Accounts.Add(newAccount.Address, newAccount);
             return newAccount.Address;
@@ -50,7 +54,6 @@ namespace BlockAppsSDK.Users
         {
             var accounts = await AccountManager.GetAccountsForUser(Name);
             Accounts = accounts.ToDictionary(x => x.Address);
-            return;
         }
 
         public async Task<AccountTransaction> Send(string toAddress, uint value)
@@ -67,6 +70,11 @@ namespace BlockAppsSDK.Users
                 return transaction;
             }
             return null;
+        }
+
+        public async Task RefreshAllAccounts()
+        {
+            await Task.WhenAll(Accounts.Select(x => x.Value.Refresh()).ToList());
         }
     }
 

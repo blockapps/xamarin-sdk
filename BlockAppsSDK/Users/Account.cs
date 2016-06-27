@@ -45,6 +45,7 @@ namespace BlockAppsSDK.Users
             var resp = await Utils.POST(url, postData);
 
             var transaction = JsonConvert.DeserializeObject<AccountTransaction>(resp);
+            await Refresh();
 
             return transaction;
 
