@@ -55,7 +55,7 @@ namespace BlockAppsSDKTest.Contracts
 
             Assert.IsNotNull(SimpleStorage);
             Assert.IsTrue(SimpleStorage.Properties["storedData"].Equals("0") ||
-               SimpleStorage.Properties["storedData"].Equals("0")) ;
+               SimpleStorage.Properties["storedData"].Equals("1")) ;
         }
 
         [TestMethod]
