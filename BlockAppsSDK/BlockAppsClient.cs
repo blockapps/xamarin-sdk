@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BlockAppsSDK.Blocks;
-using BlockAppsSDK.Contracts;
+﻿using BlockAppsSDK.Blocks;
 using BlockAppsSDK.Users;
-using Xamarin.Forms;
 
 namespace BlockAppsSDK
 {

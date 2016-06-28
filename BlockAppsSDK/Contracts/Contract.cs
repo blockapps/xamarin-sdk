@@ -50,17 +50,20 @@ namespace BlockAppsSDK.Contracts
 
         }
 
-        public async Task<bool> Refresh()
+        public new async Task<bool> Refresh()
         {
+            var accountRefresh = base.Refresh();
             var stateTask = GetContractState(Address);
             var state = await stateTask;
             if (state == null)
             {
+                await accountRefresh;
                 return false;
             }
 
             Methods.Clear();
             Properties.Clear();
+
             foreach (var keyValuePair in state)
             {
                 if (keyValuePair.Value.Contains("function"))
@@ -73,6 +76,7 @@ namespace BlockAppsSDK.Contracts
                 }
             }
 
+            await accountRefresh;
             return true;
         }
 

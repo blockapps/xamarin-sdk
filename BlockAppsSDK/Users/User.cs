@@ -23,7 +23,7 @@ namespace BlockAppsSDK.Users
 
         public AccountManager AccountManager { get; private set; }
 
-        public ContractManager UserContractManager { get; private set; }
+        public BoundContractManager BoundContractManager { get; private set; }
 
         //Constructors
         public User(Connection connection, string name, string password)
@@ -31,7 +31,7 @@ namespace BlockAppsSDK.Users
             Name = name;
             Password = password;
             AccountManager = new AccountManager(connection);
-            UserContractManager = new BoundContractManager(connection)
+            BoundContractManager = new BoundContractManager(connection)
             {
                 Password = password,
                 Username = name 

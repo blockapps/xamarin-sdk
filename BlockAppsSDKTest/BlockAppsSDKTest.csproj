@@ -66,9 +66,7 @@
     <Compile Include="Blocks\BlockTests.cs" />
     <Compile Include="Contracts\ContractTests.cs" />
     <Compile Include="Contracts\BoundContractTest.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTest2.cs" />
     <Compile Include="Users\UserTests.cs" />
   </ItemGroup>
   <ItemGroup>
