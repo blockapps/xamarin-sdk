@@ -25,7 +25,7 @@ namespace BlockAppsSDK.Users
             var newUser = new User(Connection, name, password);
             var accountAddress = await newUser.AddNewAccount();
 
-            newUser.DefaultAccount = accountAddress;
+            newUser.SetDefaultAccount(accountAddress);
 
             return newUser;
         }
@@ -35,7 +35,7 @@ namespace BlockAppsSDK.Users
             var user = new User(Connection, name, password);
 
             await user.PopulateAccounts();
-            user.DefaultAccount = user.Accounts.FirstOrDefault().Key;
+            user.SetDefaultAccount(user.Accounts.FirstOrDefault().Key);
 
             return user;
         }

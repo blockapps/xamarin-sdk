@@ -65,7 +65,7 @@ namespace BlockAppsSDKTest.Contracts
             Assert.IsTrue(contractAddresses.Length > 0);
             var SimpleStorage = await ContractManager.GetContract("SimpleStorage",
                 contractAddresses[0]);
-            Assert.IsNotNull(await SimpleStorage.Refresh());
+            Assert.IsNotNull(await SimpleStorage.RefreshContract());
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace BlockAppsSDKTest.Contracts
                 resp = await SimpleStorage.CallMethod("set", args, "charlie", "test",
                     "219e43441e184f16fb0386afd3aed1e780632042", 3);
                 Console.WriteLine(resp);
-                await SimpleStorage.Refresh();
+                await SimpleStorage.RefreshContract();
                 Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
             }
             else
@@ -94,7 +94,7 @@ namespace BlockAppsSDKTest.Contracts
                  "219e43441e184f16fb0386afd3aed1e780632042", 3);
                 Console.WriteLine(resp);
                 Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
-                await SimpleStorage.Refresh();
+                await SimpleStorage.RefreshContract();
                 Assert.AreEqual(SimpleStorage.Properties["storedData"], "1");
             }
             

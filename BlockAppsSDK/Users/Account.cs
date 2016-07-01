@@ -45,13 +45,13 @@ namespace BlockAppsSDK.Users
             var resp = await Utils.POST(url, postData);
 
             var transaction = JsonConvert.DeserializeObject<AccountTransaction>(resp);
-            await Refresh();
+            await RefreshAccount();
 
             return transaction;
 
         }
 
-        public async Task Refresh()
+        public async Task RefreshAccount()
         {
             var url = Connection.StratoUrl + "/account?address=" + Address;
             var accountList = JsonConvert.DeserializeObject<List<Account>>(await Utils.GET(url));

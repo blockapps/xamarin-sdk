@@ -61,7 +61,7 @@ namespace BlockAppsSDK.Contracts
                 Properties = new Dictionary<string, string>()
             };
 
-            await contract.Refresh();
+            await contract.RefreshContract();
             
             return contract;
         }

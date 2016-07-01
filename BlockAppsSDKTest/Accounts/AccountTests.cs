@@ -55,7 +55,7 @@ namespace BlockAppsSDKTest.Accounts
             var balanceTest = accountTest.Balance;
             var transaction =  await accountTest.Send(charlieAccount.Address, 10, "accountTest", "test");
             Assert.AreEqual(transaction.Value, "10000000000000000000");
-            await Task.WhenAll(new Task[2] {charlieAccount.Refresh(), accountTest.Refresh()});
+            await Task.WhenAll(new Task[2] {charlieAccount.RefreshAccount(), accountTest.RefreshAccount()});
             Assert.IsTrue(double.Parse(balanceCharlie) < double.Parse(charlieAccount.Balance));
             Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Balance));
         }

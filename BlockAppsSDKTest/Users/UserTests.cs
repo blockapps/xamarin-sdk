@@ -69,7 +69,7 @@ namespace BlockAppsSDKTest.Users
             var balanceCharlie = charlie.Accounts[charlie.DefaultAccount].Balance;
             var balanceTest = accountTest.Accounts[accountTest.DefaultAccount].Balance;
             var transaction = await accountTest.Send(charlie.DefaultAccount, 10);
-            await charlie.Accounts[charlie.DefaultAccount].Refresh();
+            await charlie.Accounts[charlie.DefaultAccount].RefreshAccount();
             Assert.AreEqual(transaction.Value, "10000000000000000000");
             Assert.IsTrue(double.Parse(balanceCharlie) < double.Parse(charlie.Accounts[charlie.DefaultAccount].Balance));
             Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Accounts[accountTest.DefaultAccount].Balance));

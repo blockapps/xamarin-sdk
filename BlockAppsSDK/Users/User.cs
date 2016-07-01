@@ -17,7 +17,7 @@ namespace BlockAppsSDK.Users
 
         public string Password {private get; set; }
 
-        public string DefaultAccount { get; set; }
+        public string DefaultAccount { get; private set; }
 
         public Dictionary<string,Account> Accounts { get; private set; }
 
@@ -39,6 +39,12 @@ namespace BlockAppsSDK.Users
         }
 
         //Methods
+        public void SetDefaultAccount(string address)
+        {
+            DefaultAccount = address;
+            BoundContractManager.DefaultAddress = address;
+        }
+
         public async Task<string> AddNewAccount()
         {
             if (Accounts == null)
@@ -74,7 +80,7 @@ namespace BlockAppsSDK.Users
 
         public async Task RefreshAllAccounts()
         {
-            await Task.WhenAll(Accounts.Select(x => x.Value.Refresh()).ToList());
+            await Task.WhenAll(Accounts.Select(x => x.Value.RefreshAccount()).ToList());
         }
     }
 

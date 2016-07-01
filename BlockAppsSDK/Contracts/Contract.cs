@@ -50,9 +50,9 @@ namespace BlockAppsSDK.Contracts
 
         }
 
-        public new async Task<bool> Refresh()
+        public async Task<bool> RefreshContract()
         {
-            var accountRefresh = base.Refresh();
+            var accountRefresh = RefreshAccount();
             var stateTask = GetContractState(Address);
             var state = await stateTask;
             if (state == null)
