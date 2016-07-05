@@ -31,6 +31,11 @@ namespace BlockAppsSDK.Contracts
             //};
             //var serializedModel = JsonConvert.SerializeObject(postData);
             var responseContent = await Utils.POST(url, postData);
+
+            if (responseContent.Contains("invalid"))
+            {
+                return null;
+            }
             return await GetContract(contractName, responseContent);
 
             
