@@ -67,6 +67,7 @@
     <Compile Include="Contracts\ContractTests.cs" />
     <Compile Include="Contracts\BoundContractTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UsageExamples.cs" />
     <Compile Include="Users\UserTests.cs" />
   </ItemGroup>
   <ItemGroup>
