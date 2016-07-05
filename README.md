@@ -9,7 +9,7 @@ way to interact with the Strato and Bloc API's with native C# classes.
   * Running [bloc](https://github.com/blockapps/bloc) server
   * (Optional) Personal [Strato](https://azure.microsoft.com/en-us/marketplace/partners/consensys/blockapps-strato/) instance*
 
-  \*We offer a development strato instance at: http://strato-dev3.blockapps.net/eth/v1.1/
+  \*We offer a development strato instance at: http://strato-dev4.blockapps.net/eth/v1.2/
 ## Usage examples
 
 Get Block 2.
