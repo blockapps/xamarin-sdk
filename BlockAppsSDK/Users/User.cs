@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BlockAppsSDK.Blocks;
 using Newtonsoft.Json;
+using BlockAppsSDK.Contracts;
 
 namespace BlockAppsSDK.Users
 {
@@ -12,44 +15,75 @@ namespace BlockAppsSDK.Users
         //Properties
         public string Name { get; set; }
 
-        public string Password { get; set; }
+        public string Password {private get; set; }
 
-        public List<Account> Accounts { get; set; }
+        public string DefaultAccount { get; private set; }
 
-        //Static Methods
-        public static async Task<User> CreateUser(string name, string password)
+        public Dictionary<string,Account> Accounts { get; private set; }
+
+        public AccountManager AccountManager { get; private set; }
+
+        public BoundContractManager BoundContractManager { get; private set; }
+
+        //Constructors
+        public User(Connection connection, string name, string password)
         {
-            var users = await GetAllUserNames();
-            if (users.Contains(name))
+            Name = name;
+            Password = password;
+            AccountManager = new AccountManager(connection);
+            BoundContractManager = new BoundContractManager(connection)
             {
-                return null;
+                Password = password,
+                Username = name 
+            };
+        }
+
+        //Methods
+        public void SetDefaultAccount(string address)
+        {
+            DefaultAccount = address;
+            BoundContractManager.DefaultAddress = address;
+        }
+
+        public async Task<string> AddNewAccount()
+        {
+            if (Accounts == null)
+            {
+                Accounts = new Dictionary<string, Account>();
             }
-            var newUser = new User
-            {
-                Name = name,
-                Password = password,
-                Accounts = new List<Account>()
-            };
-            newUser.Accounts.Add(await Account.CreateAccount(name, password, true));
-            return newUser;
+            var newAccount = await AccountManager.CreateAccount(Name, Password, true);
+            Accounts.Add(newAccount.Address, newAccount);
+            return newAccount.Address;
         }
 
-        public static async Task<User> GetUser(string name, string password)
+        public async Task PopulateAccounts()
         {
-            return new User
-            {
-                Name = name,
-                Password = password,
-                Accounts = await Account.GetAccounts(name)
-            };
+            var accounts = await AccountManager.GetAccountsForUser(Name);
+            Accounts = accounts.ToDictionary(x => x.Address);
         }
 
-        public static async Task<List<string>> GetAllUserNames()
+        public async Task<AccountTransaction> Send(string toAddress, uint value)
         {
-            var res = await Utils.GET(ConnectionString.BlocUrl + "/users");
-            return JsonConvert.DeserializeObject<List<string>>(res);
+            var transaction = await Accounts[DefaultAccount].Send(toAddress, value, Name, Password);
+            return transaction;
+        }
+
+        public async Task<AccountTransaction> Send(string toAddress, string fromAddress, uint value)
+        {
+            if (Accounts.ContainsKey(fromAddress))
+            {
+                var transaction = await Accounts[fromAddress].Send(toAddress, value, Name, Password);
+                return transaction;
+            }
+            return null;
+        }
+
+        public async Task RefreshAllAccounts()
+        {
+            await Task.WhenAll(Accounts.Select(x => x.Value.RefreshAccount()).ToList());
         }
     }
+
 
     public class PostNewUserModel
     {
