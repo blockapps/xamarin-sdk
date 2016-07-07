@@ -28,10 +28,15 @@ namespace BlockAppsSDK.Users
         {
             if (address == null || address.Equals(""))
             {
-                throw new ArgumentException("Address is null or empty", nameof(address));
+                return null;
             }
+
             var url = Connection.StratoUrl + "/account?address=" + address;
-            var accountList = JsonConvert.DeserializeObject<List<Account>>(await Utils.GET(url));
+
+            var getResult = await Utils.GET(url);
+
+            var accountList = JsonConvert.DeserializeObject<List<Account>>(getResult);
+
             if (accountList.Count > 0)
             {
                 var account =  accountList.First();
@@ -44,29 +49,19 @@ namespace BlockAppsSDK.Users
                 }
                 return account;
             }
-            else
-            {
                 return null;
-            }
         }
 
         public async Task<List<Account>> GetAccountsForUser(string username)
         {
-            var addresses = JsonConvert.DeserializeObject<string[]>(await Utils.GET(Connection.BlocUrl + "/users/" + username));
-            //List<Task<string>> accountTasks = (from address in addresses
-            //                                   select Utils.GET(Connection.StratoUrl + "/account?address=" + address)).ToList();
-            //List<string> accountJsonList = (await Task.WhenAll(accountTasks)).ToList();
+            var res = await Utils.GET(Connection.BlocUrl + "/users/" + username);
 
-            //if (accountJsonList.Count < 1)
-            //{
-            //    return null;
-            //}
+            if (res.Equals("InternalServerError"))
+            {
+                return null;
+            }
 
-            //var accounts = accountJsonList.Select(x => JsonConvert.DeserializeObject<Account[]>(x)[0]).ToList();
-            //foreach (var account in accounts)
-            //{
-            //    account.Connection = Connection;
-            //}
+            var addresses = JsonConvert.DeserializeObject<string[]>(res);
             List<Task<Account>> accountTasks = (from address in addresses
                                                select GetAccount(address)).ToList();
             List<Account> accounts = (await Task.WhenAll(accountTasks)).ToList();

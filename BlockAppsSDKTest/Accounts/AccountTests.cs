@@ -25,6 +25,13 @@ namespace BlockAppsSDKTest.Accounts
         }
 
         [TestMethod]
+        public async Task NoAccountsForUnregisteredUser()
+        {
+            var accounts = await AccountManager.GetAccountsForUser("not-a-user");
+            Assert.IsNull(accounts);
+        }
+
+        [TestMethod]
         public async Task CanGetAllAccountsForUsers()
         {
             var allAccountAddresses = await AccountManager.GetAccountAddressesForAllUsers();
@@ -53,7 +60,7 @@ namespace BlockAppsSDKTest.Accounts
             Assert.IsNotNull(accountTest);
             var balanceCharlie = charlieAccount.Balance;
             var balanceTest = accountTest.Balance;
-            var transaction =  await accountTest.Send(charlieAccount.Address, 10, "accountTest", "test");
+            var transaction = await accountTest.Send(charlieAccount.Address, 10, "accountTest", "test");
             Assert.AreEqual(transaction.Value, "10000000000000000000");
             await Task.WhenAll(new Task[2] {charlieAccount.RefreshAccount(), accountTest.RefreshAccount()});
             Assert.IsTrue(double.Parse(balanceCharlie) < double.Parse(charlieAccount.Balance));

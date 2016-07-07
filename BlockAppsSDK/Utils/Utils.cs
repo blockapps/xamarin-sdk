@@ -11,33 +11,36 @@ namespace BlockAppsSDK
     {
         public static async Task<string> GET(string url)
         {
-            //return await new HttpClient().GetAsync(url);
-            var httpclient = new HttpClient();
-            var response = await httpclient.GetAsync(url);
-            httpclient.Dispose();
-            if (response.IsSuccessStatusCode)
+            using (HttpClient httpclient = new HttpClient())
             {
-                return await response.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                throw new HttpRequestException();
+
+                var response = await httpclient.GetAsync(url);
+                httpclient.Dispose();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    return response.StatusCode.ToString();
+                }
             }
         }
 
         public static async Task<string> POST(string url, string jsonObject)
         {
-            var httpclient = new HttpClient();
-            var response = await httpclient.PostAsync(url, new StringContent(jsonObject, Encoding.UTF8, "application/json"));
-            httpclient.Dispose();
-
-            if (response.IsSuccessStatusCode)
+            using (HttpClient httpclient = new HttpClient())
             {
-                return await response.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                throw new HttpRequestException();
+                var response =
+                    await httpclient.PostAsync(url, new StringContent(jsonObject, Encoding.UTF8, "application/json"));
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new HttpRequestException();
+                }
             }
         } 
     }
