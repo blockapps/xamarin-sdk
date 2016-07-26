@@ -54,12 +54,19 @@ namespace BlockAppsSDK.Contracts
 
         public async Task<Contract> GetContract(string contractName, string address)
         {
-            var contractTask = GetAccount(address);
+            var contractAccountTask = GetAccount(address);
+            var contractAddressesTask = GetContractAddresses(contractName);
             //var stateTask = GetContractState(address, contractName);
 
-            var account = await contractTask;
+            var addresses = await contractAddressesTask;
+            if (!addresses.Contains(address))
+            {
+                return null;
+            }
 
-            var contract = new Contract(account)
+            var contractAccount = await contractAccountTask;
+
+            var contract = new Contract(contractAccount)
             {
                 Name = contractName,
                 Methods = new List<string>(),
