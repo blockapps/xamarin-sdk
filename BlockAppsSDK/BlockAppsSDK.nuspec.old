@@ -2,21 +2,23 @@
 <package >
   <metadata>
     <id>BlockAppsSDK</id>
-    <version>1.1.0-beta1</version>
+    <version>1.0.3.0-alpha</version>
     <title>$title$</title>
     <authors>BlockApps charlescrain</authors>
     <owners>$author$</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <projectUrl>https://github.com/blockapps/xamarin-sdk</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>BlockAppsSDK is a client, portable class library targeting .NET 4.5 and above and Xamarin 4.0 and above. It provides a simple way to interact with the Strato and Bloc API's with native C# classes.</description>
-    <releaseNotes>Breaking changes with new architecture for the client. Please see latest usage examples at our repo.</releaseNotes>
+    <description>BlockAppsSDK is a client, portable class library targeting Xamarin for Visual Studio 4.0 and above. It provides a simple
+way to interact with the Strato and Bloc API's with native C# classes.</description>
+    <releaseNotes>minor bug fixes within contract and account classes.</releaseNotes>
     <dependencies>
       <dependency id="Microsoft.Bcl" version="1.1.10" />
       <dependency id="Microsoft.Bcl.Build" version="1.0.14" />
       <dependency id="Microsoft.Net.Http" version="2.2.29" />
       <dependency id="modernhttpclient" version="2.4.2"  />
       <dependency id="Newtonsoft.Json" version="8.0.3"  />
+      <dependency id="Xamarin.Forms" version="2.2.0.31"  />
     </dependencies>
     <copyright>Copyright 2016</copyright>
     <tags>Ethereum Blockchain Cryptocurrency Bitcoin Finance SmartContract</tags>

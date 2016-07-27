@@ -11,30 +11,67 @@ namespace BlockAppsSDKTest.Accounts
     [TestClass]
     public class AccountTests
     {
+        private AccountManager AccountManager { get; set; }
+
         [TestMethod]
-        public async Task CreateAndGetAccount()
+        public async Task CanCreateThenGetSameAccount()
         {
-            //ConnectionString.StratoUrl = "http://xamarintest.centralus.cloudapp.azure.com/strato-single/eth/v1.1/";
-            //ConnectionString.BlocUrl = "http://xamarintest.centralus.cloudapp.azure.com:8000";
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
             //Create an Account to query
-            var newAccount = await Account.CreateAccount("accountTest", "test", true);
-            var account = await Account.GetAccount(newAccount.Address);
-            Assert.AreEqual(newAccount, account);
+            var newAccount = await AccountManager.CreateAccount("accountTest", "test", true);
+            var account = await AccountManager.GetAccount(newAccount.Address);
+            Assert.AreEqual(newAccount.Address, account.Address);
+            Assert.AreEqual(newAccount.Balance, account.Balance);
+            Assert.AreEqual(newAccount.ContractRoot, account.ContractRoot);
         }
 
         [TestMethod]
-        public async Task GetAllUserAccounts()
+        public async Task NoAccountsForUnregisteredUser()
         {
-            //ConnectionString.StratoUrl = "http://xamarintest.centralus.cloudapp.azure.com/strato-single/eth/v1.1/";
-            //ConnectionString.BlocUrl = "http://xamarintest.centralus.cloudapp.azure.com:8000";
-            ConnectionString.BlocUrl = "http://13.93.154.77:8000";
-            //Create an Account to query
-            var allAccountAddresses = await Account.GetAccountAddresses();
-            List<Task<Account>> allAccountsTask = allAccountAddresses.Select(async addr => await Account.GetAccount(addr)).ToList();
+            var accounts = await AccountManager.GetAccountsForUser("not-a-user");
+            Assert.IsNull(accounts);
+        }
+
+        [TestMethod]
+        public async Task CanGetAllAccountsForUsers()
+        {
+            var allAccountAddresses = await AccountManager.GetAccountAddressesForAllUsers();
+            Assert.IsNotNull(allAccountAddresses);
+            //List<Task<Account>> allAccountsTask = allAccountAddresses.Select(async addr => await AccountManager.GetAccount(addr)).ToList();
+            foreach (var user in allAccountAddresses)
+            {
+                foreach (var address in user.Value)
+                {
+                    var account = AccountManager.GetAccount(address);
+                    Assert.IsNotNull(account);
+                }
+            }
+
+            //var allAccounts = (await Task.WhenAll(allAccountsTask)).ToList();
+            //Assert.IsNotNull(allAccounts);
+        }
+
+        [TestMethod]
+        public async Task CanSend()
+        {
             
-            var allAccounts = (await Task.WhenAll(allAccountsTask)).ToList();
-            Assert.IsNotNull(allAccounts);
+            var charlieAccount = await AccountManager.GetAccount("219e43441e184f16fb0386afd3aed1e780632042");
+            var accountTest = await AccountManager.GetAccount("3468276182f204ebe569fa572e8cee697f3379fd");
+            Assert.IsNotNull(charlieAccount);
+            Assert.IsNotNull(accountTest);
+            var balanceCharlie = charlieAccount.Balance;
+            var balanceTest = accountTest.Balance;
+            var transaction = await accountTest.Send(charlieAccount.Address, 10, "accountTest", "test");
+            Assert.AreEqual(transaction.Value, "10000000000000000000");
+            await Task.WhenAll(new Task[2] {charlieAccount.RefreshAccount(), accountTest.RefreshAccount()});
+            Assert.IsTrue(double.Parse(balanceCharlie) < double.Parse(charlieAccount.Balance));
+            Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Balance));
+        }
+
+        [TestInitialize]
+        public void SetupManagers()
+        {
+           AccountManager = new AccountManager(new Connection("http://40.118.255.235:8000",
+                "http://40.118.255.235/eth/v1.2")); 
         }
     }
 }

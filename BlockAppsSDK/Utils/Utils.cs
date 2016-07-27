@@ -7,34 +7,40 @@ using System.Net.Http;
 
 namespace BlockAppsSDK
 {
-    public static class Utils
+    internal static class Utils
     {
         public static async Task<string> GET(string url)
         {
-            //return await new HttpClient().GetAsync(url);
-            var response = await new HttpClient().GetAsync(url);
+            using (HttpClient httpclient = new HttpClient())
+            {
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                throw new HttpRequestException();
+                var response = await httpclient.GetAsync(url);
+                httpclient.Dispose();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    return response.StatusCode.ToString();
+                }
             }
         }
 
         public static async Task<string> POST(string url, string jsonObject)
         {
-            var response = await new HttpClient().PostAsync(url, new StringContent(jsonObject, Encoding.UTF8, "application/json"));
-
-            if (response.IsSuccessStatusCode)
+            using (HttpClient httpclient = new HttpClient())
             {
-                return await response.Content.ReadAsStringAsync();
-            }
-            else
-            {
-                throw new HttpRequestException();
+                var response =
+                    await httpclient.PostAsync(url, new StringContent(jsonObject, Encoding.UTF8, "application/json"));
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new HttpRequestException();
+                }
             }
         } 
     }

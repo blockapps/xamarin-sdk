@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
+// associated with an assemblyt 
 [assembly: AssemblyTitle("BlockAppsSDK")]
 [assembly: AssemblyDescription("BlockAppsSDK is a client, portable class library targeting Xamarin for Visual Studio 4.0 and above. It provides a simpleway to interact with the Strato and Bloc API's with native C# classes.")]
 [assembly: AssemblyConfiguration("")]
