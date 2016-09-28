@@ -17,14 +17,15 @@ namespace BlockAppsSDK.Contracts
         public string Name { get; set; }
 
         public List<string> Methods { get; set; }
-        
-        public Dictionary<string,string> Properties { get; set; }
+
+        //public dynamic Properties { get; set; }
+        public Dictionary<string, string> Properties { get; set; }
 
 
 
         //Constructor
 
-        
+
         public Contract(Account account) : base(account.Connection)
         {
             ContractRoot = account.ContractRoot;
@@ -66,13 +67,14 @@ namespace BlockAppsSDK.Contracts
 
             foreach (var keyValuePair in state)
             {
-                if (keyValuePair.Value.Contains("function"))
+                if (keyValuePair.Value.ToString().Contains("function"))
                 {
                     Methods.Add(keyValuePair.Key);
                 }
                 else
                 {
-                    Properties.Add(keyValuePair.Key, keyValuePair.Value);
+                    
+                    Properties.Add(keyValuePair.Key, keyValuePair.Value.ToString());
                 }
             }
 
@@ -80,13 +82,14 @@ namespace BlockAppsSDK.Contracts
             return true;
         }
 
-        private async Task<Dictionary<string, string>> GetContractState(string address)
+        private async Task<Dictionary<string, dynamic>> GetContractState(string address)
         {
             var url = Connection.BlocUrl + "/contracts/" + Name + "/" + address + "/state";
             try
             {
                 var responseContent = await Utils.GET(url);
-                var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
+                //var contractState = JObject.Parse(responseContent); ;
+                var contractState = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(responseContent);
 
                 return contractState;
             }
