@@ -71,7 +71,7 @@ namespace BlockAppsSDKTest.Accounts
         public void SetupManagers()
         {
            AccountManager = new AccountManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
-                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2")); 
+                "http://tester9.centralus.cloudapp.azure.com")); 
         }
     }
 }

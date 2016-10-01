@@ -52,7 +52,7 @@ namespace BlockAppsSDKTest.Users
             var test = await UserManager.GetUser("test", "test");
             var numOfAccounts = test.Accounts.Count;
             var accountManager = new AccountManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
-                     "http://tester9.centralus.cloudapp.azure.com/eth/v1.2"));
+                     "http://tester9.centralus.cloudapp.azure.com"));
             await accountManager.CreateAccount("test", "test", true);
             await test.PopulateAccounts();
             Assert.IsTrue(numOfAccounts < test.Accounts.Count);
@@ -88,7 +88,7 @@ namespace BlockAppsSDKTest.Users
             if (UserManager == null)
             {
                 UserManager = new UserManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
-                     "http://tester9.centralus.cloudapp.azure.com/eth/v1.2"));
+                     "http://tester9.centralus.cloudapp.azure.com"));
             }
             if (NewUser == null)
             {

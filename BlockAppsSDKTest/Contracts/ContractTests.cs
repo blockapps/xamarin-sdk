@@ -120,9 +120,9 @@ namespace BlockAppsSDKTest.Contracts
         public void SetupManagers()
         {
             UserManager = new UserManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
-                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2"));
+                "http://tester9.centralus.cloudapp.azure.com"));
             ContractManager = new ContractManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
-                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2")); 
+                "http://tester9.centralus.cloudapp.azure.com")); 
         }
     }
 }

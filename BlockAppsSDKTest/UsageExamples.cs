@@ -13,9 +13,9 @@ namespace BlockAppsSDKTest
         public async Task GetBLock()
         {
             var BAClient = new BlockAppsClient("http://tester9.centralus.cloudapp.azure.com:8000",
-                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2");
+                "http://tester9.centralus.cloudapp.azure.com");
             //var BAClient = new BlockAppsClient("http://localhost:8000",
-            //    "http://strato-dev4.blockapps.net/eth/v1.2");
+            //    "http://strato-dev4.blockapps.net");
             var block2 = await BAClient.BlockManager.GetBlock(2);
             Console.WriteLine("Block 2 has nonce: " + block2.BlockData.Nonce);
         }
@@ -24,9 +24,9 @@ namespace BlockAppsSDKTest
         public async Task CreateUser()
         {
             var BAClient = new BlockAppsClient("http://tester9.centralus.cloudapp.azure.com:8000",
-                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2");
+                "http://tester9.centralus.cloudapp.azure.com");
             //var BAClient = new BlockAppsClient("http://localhost:8000",
-            //    "http://strato-dev4.blockapps.net/eth/v1.2");
+            //    "http://strato-dev4.blockapps.net");
             
             //Create a new user 'test' with secret key 'test'
             //Then check the balance of the default account set to user test
@@ -46,9 +46,9 @@ namespace BlockAppsSDKTest
         public async Task DeployContract()
         {
             var BAClient = new BlockAppsClient("http://tester9.centralus.cloudapp.azure.com:8000",
-                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2");
+                "http://tester9.centralus.cloudapp.azure.com");
             //var BAClient = new BlockAppsClient("http://localhost:8000",
-            //    "http://strato-dev4.blockapps.net/eth/v1.2");
+            //    "http://strato-dev4.blockapps.net");
 
             var newUser = await BAClient.UserManager.CreateUser("test", "test");
             if (newUser == null)

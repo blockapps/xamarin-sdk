@@ -11,13 +11,14 @@ namespace BlockAppsSDK
     {
 
         public string BlocUrl { get; private set; } = "http://localhost:8000";
-        public string StratoUrl { get; private set; } = "http://strato-dev4.blockapps.net/eth/v1.2";
+        public string StratoUrl { get; private set; } = "http://strato-dev4.blockapps.net";
 
         public Connection() { }
         public Connection(string blocUrl, string stratoUrl)
         {
             BlocUrl = blocUrl.EndsWith("/") ? blocUrl.Substring(0, blocUrl.Length - 1) : blocUrl;
             StratoUrl = stratoUrl.EndsWith("/") ? stratoUrl.Substring(0, stratoUrl.Length - 1) : stratoUrl;
+            StratoUrl += "/eth/v1.2";
         }
     }
 }
