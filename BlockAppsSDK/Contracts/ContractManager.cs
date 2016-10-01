@@ -18,28 +18,22 @@ namespace BlockAppsSDK.Contracts
         {
         }
 
-        public async Task<Contract> CreateContract(string src, string contractName, string username, string password, string address)
+        public async Task<Contract<T>> CreateContract<T>(string src, string contractName, string username, string password, string address)
         {
             var url = Connection.BlocUrl + "/users/" + username + "/" + address + "/contract";
             var postData = "{}";
-
             postData = new JObject(new JProperty("password", password), new JProperty("src", src)).ToString();
-            //var postModel = new DeployContractModel
-            //{
-            //    password = user.Password,
-            //    src = src
-            //};
-            //var serializedModel = JsonConvert.SerializeObject(postData);
+           
             var responseContent = await Utils.POST(url, postData);
 
             if (responseContent.Contains("invalid"))
             {
                 return null;
             }
-            return await GetContract(contractName, responseContent);
-
-            
+            return await GetContract<T>(contractName, responseContent);
         }
+
+
 
         public async Task<string[]> GetContractAddresses(string name)
         {
@@ -52,7 +46,7 @@ namespace BlockAppsSDK.Contracts
             return addresses;
         }
 
-        public async Task<Contract> GetContract(string contractName, string address)
+        public async Task<Contract<T>> GetContract<T>(string contractName, string address)
         {
             var contractAccountTask = GetAccount(address);
             var contractAddressesTask = GetContractAddresses(contractName);
@@ -66,11 +60,9 @@ namespace BlockAppsSDK.Contracts
 
             var contractAccount = await contractAccountTask;
 
-            var contract = new Contract(contractAccount)
+            var contract = new Contract<T>(contractAccount)
             {
                 Name = contractName,
-                Methods = new List<string>(),
-                Properties = new Dictionary<string, string>()
             };
 
             await contract.RefreshContract();
@@ -78,20 +70,42 @@ namespace BlockAppsSDK.Contracts
             return contract;
         }
 
-        public async Task<List<Contract>> GetContractsWithName(string contractName)
+        public async Task<List<Contract<T>>> GetContractsWithName<T>(string contractName)
         {
-            var addresses = await GetContractAddresses(contractName);
+            //var addresses = await GetContractAddresses(contractName);
 
-            if (addresses.Length < 1)
+            //if (addresses.Length < 1)
+            //{
+            //    return null;
+            //}
+
+            //var contractsTask = addresses.Select(async address => await GetContract<T>(contractName, address)).ToList();
+            var url = Connection.BlocUrl + "/search/" + contractName + "/state";
+            var responseContent = await Utils.GET(url);
+
+            var dataModels = JsonConvert.DeserializeObject<List<SearchResponseItem<T>>>(responseContent);
+
+            var contracts = dataModels.Select(x => new Contract<T>(new Account(Connection)
             {
-                return null;
-            }
+                Address = x.Address
+            })
+            {
+                State = x.State
+            }).ToList();
 
-            var contractsTask = addresses.Select(async address => await GetContract(contractName, address)).ToList();
+            return contracts;
 
-            return (await Task.WhenAll(contractsTask)).ToList();
         }
+
         
 
+
+
+    }
+
+    class SearchResponseItem<T>
+    {
+        public string Address { get; set; }
+        public T State { get; set; }
     }
 }

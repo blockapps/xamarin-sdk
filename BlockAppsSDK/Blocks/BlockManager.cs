@@ -19,6 +19,7 @@ namespace BlockAppsSDK.Blocks
         public async Task<Block> GetBlock(uint blockNumber)
         {
             var url = Connection.StratoUrl + "/block?number=" + blockNumber;
+            var a = await Utils.GET(url);
             var blocks = JsonConvert.DeserializeObject<List<Block>>(await Utils.GET(url));
             if (blocks.Count < 1)
             {

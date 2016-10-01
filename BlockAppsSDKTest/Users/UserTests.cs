@@ -24,9 +24,9 @@ namespace BlockAppsSDKTest.Users
         [TestMethod]
         public async Task CanGetUser()
         {
-            var charlie = await UserManager.GetUser("charlie", "test");
-            Assert.IsNotNull(charlie);
-            Assert.IsNotNull(charlie.Accounts);
+            var test = await UserManager.GetUser("test", "test");
+            Assert.IsNotNull(test);
+            Assert.IsNotNull(test.Accounts);
         }
 
         [TestMethod]
@@ -40,46 +40,46 @@ namespace BlockAppsSDKTest.Users
         public async Task CanAddNewAccount()
         {
 
-            var charlie = await UserManager.GetUser("charlie", "test");
-            var numOfAccounts = charlie.Accounts.Count;
-            await charlie.AddNewAccount();
-            Assert.IsTrue(numOfAccounts < charlie.Accounts.Count);
+            var test = await UserManager.GetUser("test", "test");
+            var numOfAccounts = test.Accounts.Count;
+            await test.AddNewAccount();
+            Assert.IsTrue(numOfAccounts < test.Accounts.Count);
         }
 
         [TestMethod]
         public async Task CanPopulateAccounts()
         {
-            var charlie = await UserManager.GetUser("charlie", "test");
-            var numOfAccounts = charlie.Accounts.Count;
-            var accountManager = new AccountManager(new Connection("http://40.118.255.235:8000",
-                     "http://40.118.255.235/eth/v1.2"));
-            await accountManager.CreateAccount("charlie", "test", true);
-            await charlie.PopulateAccounts();
-            Assert.IsTrue(numOfAccounts < charlie.Accounts.Count);
+            var test = await UserManager.GetUser("test", "test");
+            var numOfAccounts = test.Accounts.Count;
+            var accountManager = new AccountManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
+                     "http://tester9.centralus.cloudapp.azure.com/eth/v1.2"));
+            await accountManager.CreateAccount("test", "test", true);
+            await test.PopulateAccounts();
+            Assert.IsTrue(numOfAccounts < test.Accounts.Count);
         }
 
         [TestMethod]
         public async Task CanSend()
         {
-            var charlie = await UserManager.GetUser("charlie", "test");
+            var test = await UserManager.GetUser("test", "test");
             var accountTest = await UserManager.GetUser("accountTest", "test");
 
-            Assert.IsNotNull(charlie);
+            Assert.IsNotNull(test);
             Assert.IsNotNull(accountTest);
-            var balanceCharlie = charlie.Accounts[charlie.DefaultAccount].Balance;
+            var balancetest = test.Accounts[test.DefaultAccount].Balance;
             var balanceTest = accountTest.Accounts[accountTest.DefaultAccount].Balance;
-            var transaction = await accountTest.Send(charlie.DefaultAccount, 10);
-            await charlie.Accounts[charlie.DefaultAccount].RefreshAccount();
+            var transaction = await accountTest.Send(test.DefaultAccount, 10);
+            await test.Accounts[test.DefaultAccount].RefreshAccount();
             Assert.AreEqual(transaction.Value, "10000000000000000000");
-            Assert.IsTrue(double.Parse(balanceCharlie) < double.Parse(charlie.Accounts[charlie.DefaultAccount].Balance));
+            Assert.IsTrue(double.Parse(balancetest) < double.Parse(test.Accounts[test.DefaultAccount].Balance));
             Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Accounts[accountTest.DefaultAccount].Balance));
         }
 
         [TestMethod]
         public async Task CanRefreshAllAccounts()
         {
-            var charlie = await UserManager.GetUser("charlie", "test");
-            await charlie.RefreshAllAccounts();
+            var test = await UserManager.GetUser("test", "test");
+            await test.RefreshAllAccounts();
         }
 
         [TestInitialize]
@@ -87,8 +87,8 @@ namespace BlockAppsSDKTest.Users
         {
             if (UserManager == null)
             {
-                UserManager = new UserManager(new Connection("http://40.118.255.235:8000",
-                     "http://40.118.255.235/eth/v1.2"));
+                UserManager = new UserManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
+                     "http://tester9.centralus.cloudapp.azure.com/eth/v1.2"));
             }
             if (NewUser == null)
             {

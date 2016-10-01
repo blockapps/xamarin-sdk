@@ -19,9 +19,9 @@ namespace BlockAppsSDK.Contracts
         {
         }
 
-        public async Task<BoundContract> CreateBoundContract(string src, string contractName)
+        public async Task<BoundContract<T>> CreateBoundContract<T>(string src, string contractName)
         {
-            var boundContract = new BoundContract(await CreateContract(src, contractName, Username, Password, DefaultAddress))
+            var boundContract = new BoundContract<T>(await CreateContract<T>(src, contractName, Username, Password, DefaultAddress))
             {
                 Username = Username,
                 Password = Password,
@@ -30,9 +30,9 @@ namespace BlockAppsSDK.Contracts
             return boundContract;
         }
 
-        public async Task<BoundContract> CreateBoundContract(string src, string contractName, string bindAddress)
+        public async Task<BoundContract<T>> CreateBoundContract<T>(string src, string contractName, string bindAddress)
         {
-            var boundContract = new BoundContract(await CreateContract(src, contractName, Username, Password, bindAddress))
+            var boundContract = new BoundContract<T>(await CreateContract<T>(src, contractName, Username, Password, bindAddress))
             {
                 Username = Username,
                 Password = Password,
@@ -41,9 +41,9 @@ namespace BlockAppsSDK.Contracts
             return boundContract;
         }
 
-        public async Task<BoundContract> GetBoundContract(string contractName, string address)
+        public async Task<BoundContract<T>> GetBoundContract<T>(string contractName, string address)
         {
-            var boundContract = new BoundContract(await base.GetContract(contractName, address))
+            var boundContract = new BoundContract<T>(await base.GetContract<T>(contractName, address))
             {
                 Username = Username,
                 Password = Password,
@@ -52,9 +52,9 @@ namespace BlockAppsSDK.Contracts
             return boundContract;
         }
 
-        public async Task<BoundContract> GetBoundContract(string contractName, string address, string bindAddress)
+        public async Task<BoundContract<T>> GetBoundContract<T>(string contractName, string address, string bindAddress)
         {
-            var boundContract = new BoundContract(await base.GetContract(contractName,address))
+            var boundContract = new BoundContract<T>(await base.GetContract<T>(contractName,address))
             {
                 Username = Username,
                 Password = Password,
@@ -63,16 +63,16 @@ namespace BlockAppsSDK.Contracts
             return boundContract;
         }
 
-        public async Task<List<BoundContract>> GetBoundContractsWithName(string contractName)
+        public async Task<List<BoundContract<T>>> GetBoundContractsWithName<T>(string contractName)
         {
-            var contracts = await GetContractsWithName(contractName);
+            var contracts = await GetContractsWithName<T>(contractName);
 
             if (contracts == null)
             {
                 return null;
             }
 
-            var boundContracts = contracts.Select(x => new BoundContract(x)
+            var boundContracts = contracts.Select(x => new BoundContract<T>(x)
             {
                 Username = Username,
                 Password = Password,

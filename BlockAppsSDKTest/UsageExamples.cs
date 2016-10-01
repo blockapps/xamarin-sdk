@@ -12,8 +12,8 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task GetBLock()
         {
-            var BAClient = new BlockAppsClient("http://40.118.255.235:8000",
-                "http://40.118.255.235/eth/v1.2");
+            var BAClient = new BlockAppsClient("http://tester9.centralus.cloudapp.azure.com:8000",
+                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2");
             //var BAClient = new BlockAppsClient("http://localhost:8000",
             //    "http://strato-dev4.blockapps.net/eth/v1.2");
             var block2 = await BAClient.BlockManager.GetBlock(2);
@@ -23,8 +23,8 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task CreateUser()
         {
-            var BAClient = new BlockAppsClient("http://40.118.255.235:8000",
-                "http://40.118.255.235/eth/v1.2");
+            var BAClient = new BlockAppsClient("http://tester9.centralus.cloudapp.azure.com:8000",
+                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2");
             //var BAClient = new BlockAppsClient("http://localhost:8000",
             //    "http://strato-dev4.blockapps.net/eth/v1.2");
             
@@ -45,8 +45,8 @@ namespace BlockAppsSDKTest
         [TestMethod]
         public async Task DeployContract()
         {
-            var BAClient = new BlockAppsClient("http://40.118.255.235:8000",
-                "http://40.118.255.235/eth/v1.2");
+            var BAClient = new BlockAppsClient("http://tester9.centralus.cloudapp.azure.com:8000",
+                "http://tester9.centralus.cloudapp.azure.com/eth/v1.2");
             //var BAClient = new BlockAppsClient("http://localhost:8000",
             //    "http://strato-dev4.blockapps.net/eth/v1.2");
 
@@ -59,8 +59,8 @@ namespace BlockAppsSDKTest
                 "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
             
             //Create the contract bound to a user.
-            var contract = await newUser.BoundContractManager.CreateBoundContract(src, "SimpleStorage");
-            Console.WriteLine("The value of storedData is " + contract.Properties["storedData"]);
+            var contract = await newUser.BoundContractManager.CreateBoundContract<SimpleStorageState>(src, "SimpleStorage");
+            Console.WriteLine("The value of storedData is " + contract.State.StoredData);
 
             //Call the `set` method on the contract to change the value of storedData.
             var args = new Dictionary<string, string>();
@@ -73,12 +73,17 @@ namespace BlockAppsSDKTest
             //Refresh the contract since we have updated its state
             await contract.RefreshAccount();
 
-            Console.WriteLine("The value of storedData has changed to " + contract.Properties["storedData"]);
+            Console.WriteLine("The value of storedData has changed to " + contract.State.StoredData);
 
 
 
         }
 
 
+    }
+
+    public class SimpleStorageState
+    {
+        public uint StoredData { get; set; }
     }
 }

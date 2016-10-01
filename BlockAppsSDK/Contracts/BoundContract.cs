@@ -7,7 +7,7 @@ using BlockAppsSDK.Users;
 
 namespace BlockAppsSDK.Contracts
 {
-    public class BoundContract : Contract
+    public class BoundContract<T> : Contract<T>
     {
         public string Username { get; set; }
 
@@ -15,11 +15,10 @@ namespace BlockAppsSDK.Contracts
 
         public string DefaultAddress { get; set; }
 
-        public BoundContract(Contract contract) : base(contract as Account)
+        public BoundContract(Contract<T> contract) : base(contract as Account)
         {
             Name = contract.Name;
-            Methods = contract.Methods;
-            Properties = contract.Properties;
+            State = contract.State;
         }
 
         public async Task<string> CallMethod(string methodName, Dictionary<string, string> args, double value)
