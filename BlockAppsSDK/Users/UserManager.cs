@@ -22,20 +22,19 @@ namespace BlockAppsSDK.Users
             {
                 return null;
             }
-            var newUser = new User(Connection, name, password);
-            var accountAddress = await newUser.AddNewAccount();
+            var newUser = new User(Connection, name);
+            var accountAddress = await newUser.AddNewAccount(password);
 
-            newUser.SetDefaultAccount(accountAddress);
+            newUser.SetSigningAccount(accountAddress, password);
 
             return newUser;
         }
 
-        public async Task<User> GetUser(string name, string password)
+        public async Task<User> GetUser(string name)
         {
-            var user = new User(Connection, name, password);
+            var user = new User(Connection, name);
 
             await user.PopulateAccounts();
-            user.SetDefaultAccount(user.Accounts.FirstOrDefault().Key);
 
             return user;
         }

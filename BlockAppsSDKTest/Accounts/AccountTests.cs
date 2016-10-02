@@ -60,7 +60,7 @@ namespace BlockAppsSDKTest.Accounts
             Assert.IsNotNull(newAccount2);
             var balanceAccountTest = newAccount.Balance;
             var balanceAccountTest2 = newAccount2.Balance;
-            var transaction = await newAccount2.Send(newAccount.Address, 10, "accountTest2", "test");
+            var transaction = await newAccount2.Send(newAccount.Address, 10, "accountTest2");
             Assert.AreEqual(transaction.Value, "10000000000000000000");
             await Task.WhenAll(new Task[2] { newAccount.RefreshAccount(), newAccount2.RefreshAccount()});
             Assert.IsTrue(double.Parse(balanceAccountTest) < double.Parse(newAccount.Balance));

@@ -10,9 +10,10 @@ namespace BlockAppsSDK.Contracts
     {
         public string Username { get; set; }
 
-        public string Password { private get; set; }
+        public string SigningPassword { private get; set; }
 
-        public string DefaultAddress { get; set; }
+        public string SigningAddress { get; set; }
+
 
         public BoundContractManager(Connection connection)
             : base(connection)
@@ -21,22 +22,11 @@ namespace BlockAppsSDK.Contracts
 
         public async Task<BoundContract<T>> CreateBoundContract<T>(string src, string contractName)
         {
-            var boundContract = new BoundContract<T>(await CreateContract<T>(src, contractName, Username, Password, DefaultAddress))
+            var boundContract = new BoundContract<T>(await CreateContract<T>(src, contractName, Username, SigningPassword, SigningAddress))
             {
                 Username = Username,
-                Password = Password,
-                DefaultAddress = DefaultAddress
-            };
-            return boundContract;
-        }
-
-        public async Task<BoundContract<T>> CreateBoundContract<T>(string src, string contractName, string bindAddress)
-        {
-            var boundContract = new BoundContract<T>(await CreateContract<T>(src, contractName, Username, Password, bindAddress))
-            {
-                Username = Username,
-                Password = Password,
-                DefaultAddress = bindAddress
+                SigningPassword = SigningPassword,
+                SigningAddress = SigningAddress
             };
             return boundContract;
         }
@@ -46,19 +36,8 @@ namespace BlockAppsSDK.Contracts
             var boundContract = new BoundContract<T>(await base.GetContract<T>(contractName, address))
             {
                 Username = Username,
-                Password = Password,
-                DefaultAddress = DefaultAddress
-            };
-            return boundContract;
-        }
-
-        public async Task<BoundContract<T>> GetBoundContract<T>(string contractName, string address, string bindAddress)
-        {
-            var boundContract = new BoundContract<T>(await base.GetContract<T>(contractName,address))
-            {
-                Username = Username,
-                Password = Password,
-                DefaultAddress = bindAddress
+                SigningPassword = SigningPassword,
+                SigningAddress = SigningAddress
             };
             return boundContract;
         }
@@ -75,8 +54,8 @@ namespace BlockAppsSDK.Contracts
             var boundContracts = contracts.Select(x => new BoundContract<T>(x)
             {
                 Username = Username,
-                Password = Password,
-                DefaultAddress = DefaultAddress 
+                Password = SigningPassword,
+                SigningAddress = SigningAddress 
             }).ToList();
 
             return boundContracts;

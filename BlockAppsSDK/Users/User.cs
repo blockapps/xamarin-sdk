@@ -15,9 +15,7 @@ namespace BlockAppsSDK.Users
         //Properties
         public string Name { get; set; }
 
-        public string Password {private get; set; }
-
-        public string DefaultAccount { get; private set; }
+        public string SigningAccount { get; private set; }
 
         public Dictionary<string,Account> Accounts { get; private set; }
 
@@ -26,32 +24,32 @@ namespace BlockAppsSDK.Users
         public BoundContractManager BoundContractManager { get; private set; }
 
         //Constructors
-        public User(Connection connection, string name, string password)
+        public User(Connection connection, string name)
         {
             Name = name;
-            Password = password;
             AccountManager = new AccountManager(connection);
             BoundContractManager = new BoundContractManager(connection)
             {
-                Password = password,
                 Username = name 
             };
         }
 
         //Methods
-        public void SetDefaultAccount(string address)
+        public void SetSigningAccount(string address, string password)
         {
-            DefaultAccount = address;
-            BoundContractManager.DefaultAddress = address;
+            SigningAccount = address;
+            Accounts[address].Password = password;
+            BoundContractManager.SigningAddress = address;
+            BoundContractManager.SigningPassword = password;
         }
 
-        public async Task<string> AddNewAccount()
+        public async Task<string> AddNewAccount(string password)
         {
             if (Accounts == null)
             {
                 Accounts = new Dictionary<string, Account>();
             }
-            var newAccount = await AccountManager.CreateAccount(Name, Password, true);
+            var newAccount = await AccountManager.CreateAccount(Name, password, true);
             Accounts.Add(newAccount.Address, newAccount);
             return newAccount.Address;
         }
@@ -64,18 +62,8 @@ namespace BlockAppsSDK.Users
 
         public async Task<AccountTransaction> Send(string toAddress, uint value)
         {
-            var transaction = await Accounts[DefaultAccount].Send(toAddress, value, Name, Password);
+            var transaction = await Accounts[SigningAccount].Send(toAddress, value, Name);
             return transaction;
-        }
-
-        public async Task<AccountTransaction> Send(string toAddress, string fromAddress, uint value)
-        {
-            if (Accounts.ContainsKey(fromAddress))
-            {
-                var transaction = await Accounts[fromAddress].Send(toAddress, value, Name, Password);
-                return transaction;
-            }
-            return null;
         }
 
         public async Task RefreshAllAccounts()

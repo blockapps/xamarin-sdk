@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BlockAppsSDK;
 using BlockAppsSDK.Users;
@@ -24,7 +25,7 @@ namespace BlockAppsSDKTest.Users
         [TestMethod]
         public async Task CanGetUser()
         {
-            var test = await UserManager.GetUser("test", "test");
+            var test = await UserManager.GetUser("test");
             Assert.IsNotNull(test);
             Assert.IsNotNull(test.Accounts);
         }
@@ -40,16 +41,16 @@ namespace BlockAppsSDKTest.Users
         public async Task CanAddNewAccount()
         {
 
-            var test = await UserManager.GetUser("test", "test");
+            var test = await UserManager.GetUser("test");
             var numOfAccounts = test.Accounts.Count;
-            await test.AddNewAccount();
+            await test.AddNewAccount("test");
             Assert.IsTrue(numOfAccounts < test.Accounts.Count);
         }
 
         [TestMethod]
         public async Task CanPopulateAccounts()
         {
-            var test = await UserManager.GetUser("test", "test");
+            var test = await UserManager.GetUser("test");
             var numOfAccounts = test.Accounts.Count;
             var accountManager = new AccountManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
                      "http://tester9.centralus.cloudapp.azure.com"));
@@ -61,24 +62,26 @@ namespace BlockAppsSDKTest.Users
         [TestMethod]
         public async Task CanSend()
         {
-            var test = await UserManager.GetUser("test", "test");
-            var accountTest = await UserManager.GetUser("accountTest", "test");
+            var test = await UserManager.GetUser("test");
+            test.SetSigningAccount(test.Accounts.FirstOrDefault().Value.Address, "test");
+            var accountTest = await UserManager.GetUser("accountTest");
+            accountTest.SetSigningAccount(accountTest.Accounts.FirstOrDefault().Value.Address, "test");
 
             Assert.IsNotNull(test);
             Assert.IsNotNull(accountTest);
-            var balancetest = test.Accounts[test.DefaultAccount].Balance;
-            var balanceTest = accountTest.Accounts[accountTest.DefaultAccount].Balance;
-            var transaction = await accountTest.Send(test.DefaultAccount, 10);
-            await test.Accounts[test.DefaultAccount].RefreshAccount();
+            var balancetest = test.Accounts[test.SigningAccount].Balance;
+            var balanceTest = accountTest.Accounts[accountTest.SigningAccount].Balance;
+            var transaction = await accountTest.Send(test.SigningAccount, 10);
+            await test.Accounts[test.SigningAccount].RefreshAccount();
             Assert.AreEqual(transaction.Value, "10000000000000000000");
-            Assert.IsTrue(double.Parse(balancetest) < double.Parse(test.Accounts[test.DefaultAccount].Balance));
-            Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Accounts[accountTest.DefaultAccount].Balance));
+            Assert.IsTrue(double.Parse(balancetest) < double.Parse(test.Accounts[test.SigningAccount].Balance));
+            Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Accounts[accountTest.SigningAccount].Balance));
         }
 
         [TestMethod]
         public async Task CanRefreshAllAccounts()
         {
-            var test = await UserManager.GetUser("test", "test");
+            var test = await UserManager.GetUser("test");
             await test.RefreshAllAccounts();
         }
 

@@ -17,8 +17,7 @@ namespace BlockAppsSDKTest.Contracts
         {
             var src =
                 "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
-            var SimpleStorage = await BoundContractManager.CreateBoundContract<SimpleStorageState>(src, "SimpleStorage",
-                "094fec31a8a92735af93cb910b6de2cb9ed49d60");
+            var SimpleStorage = await BoundContractManager.CreateBoundContract<SimpleStorageState>(src, "SimpleStorage");
 
             Assert.IsNotNull(SimpleStorage);
             Assert.AreEqual(SimpleStorage.State.StoredData, 0);
@@ -93,8 +92,8 @@ namespace BlockAppsSDKTest.Contracts
                 "http://tester9.centralus.cloudapp.azure.com"))
             {
                 Username = "test",
-                Password = "test",
-                DefaultAddress = "094fec31a8a92735af93cb910b6de2cb9ed49d60"
+                SigningPassword = "test",
+                SigningAddress = "094fec31a8a92735af93cb910b6de2cb9ed49d60"
             };
 
         }

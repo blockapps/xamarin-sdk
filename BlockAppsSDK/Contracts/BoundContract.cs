@@ -11,9 +11,9 @@ namespace BlockAppsSDK.Contracts
     {
         public string Username { get; set; }
 
-        public string Password { private get; set; }
+        public string SigningAddress { get; set; }
 
-        public string DefaultAddress { get; set; }
+        public string SigningPassword { private get; set; }
 
         public BoundContract(Contract<T> contract) : base(contract as Account)
         {
@@ -21,13 +21,15 @@ namespace BlockAppsSDK.Contracts
             State = contract.State;
         }
 
+        public void SetSigningAccount(string address, string password)
+        {
+            SigningAddress = address;
+            SigningPassword = password;
+        }
+
         public async Task<string> CallMethod(string methodName, Dictionary<string, string> args, double value)
         {
-            return await CallMethod(methodName, args, Username, Password, DefaultAddress, value);
-        }
-        public async Task<string> CallMethod(string methodName, Dictionary<string, string> args, string accountAddress, double value)
-        {
-            return await CallMethod(methodName, args, Username, Password, accountAddress, value);
+            return await CallMethod(methodName, args, Username, SigningPassword, SigningAddress, value);
         }
     }
 }

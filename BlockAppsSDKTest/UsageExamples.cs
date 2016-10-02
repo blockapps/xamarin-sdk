@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BlockAppsSDK;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +39,7 @@ namespace BlockAppsSDKTest
             else
             {
                 Console.WriteLine("New User " + newUser.Name + "created");
-                Console.WriteLine(newUser.Name + " has " + newUser.Accounts[newUser.DefaultAccount].Balance + " wei in their default account.");
+                Console.WriteLine(newUser.Name + " has " + newUser.Accounts[newUser.SigningAccount].Balance + " wei in their default account.");
             }
         }
 
@@ -53,7 +54,8 @@ namespace BlockAppsSDKTest
             var newUser = await BAClient.UserManager.CreateUser("test", "test");
             if (newUser == null)
             {
-                newUser = await BAClient.UserManager.GetUser("test", "test");
+                newUser = await BAClient.UserManager.GetUser("test");
+                newUser.SetSigningAccount(newUser.Accounts.FirstOrDefault().Value.Address,"test");
             }
             var src =
                 "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
