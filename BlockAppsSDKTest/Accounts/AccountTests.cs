@@ -53,25 +53,25 @@ namespace BlockAppsSDKTest.Accounts
         [TestMethod]
         public async Task CanSend()
         {
+            var newAccount = await AccountManager.CreateAccount("accountTest", "test", true);
+            var newAccount2 = await AccountManager.CreateAccount("accountTest2", "test", true);
             
-            var charlieAccount = await AccountManager.GetAccount("219e43441e184f16fb0386afd3aed1e780632042");
-            var accountTest = await AccountManager.GetAccount("3468276182f204ebe569fa572e8cee697f3379fd");
-            Assert.IsNotNull(charlieAccount);
-            Assert.IsNotNull(accountTest);
-            var balanceCharlie = charlieAccount.Balance;
-            var balanceTest = accountTest.Balance;
-            var transaction = await accountTest.Send(charlieAccount.Address, 10, "accountTest", "test");
+            Assert.IsNotNull(newAccount);
+            Assert.IsNotNull(newAccount2);
+            var balanceAccountTest = newAccount.Balance;
+            var balanceAccountTest2 = newAccount2.Balance;
+            var transaction = await newAccount2.Send(newAccount.Address, 10, "accountTest2");
             Assert.AreEqual(transaction.Value, "10000000000000000000");
-            await Task.WhenAll(new Task[2] {charlieAccount.RefreshAccount(), accountTest.RefreshAccount()});
-            Assert.IsTrue(double.Parse(balanceCharlie) < double.Parse(charlieAccount.Balance));
-            Assert.IsTrue(double.Parse(balanceTest) > double.Parse(accountTest.Balance));
+            await Task.WhenAll(new Task[2] { newAccount.RefreshAccount(), newAccount2.RefreshAccount()});
+            Assert.IsTrue(double.Parse(balanceAccountTest) < double.Parse(newAccount.Balance));
+            Assert.IsTrue(double.Parse(balanceAccountTest2) > double.Parse(newAccount2.Balance));
         }
 
         [TestInitialize]
         public void SetupManagers()
         {
-           AccountManager = new AccountManager(new Connection("http://40.118.255.235:8000",
-                "http://40.118.255.235/eth/v1.2")); 
+           AccountManager = new AccountManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
+                "http://tester9.centralus.cloudapp.azure.com")); 
         }
     }
 }

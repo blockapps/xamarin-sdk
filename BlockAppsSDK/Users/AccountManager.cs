@@ -45,7 +45,8 @@ namespace BlockAppsSDK.Users
                 //bug: This is a fix for a bug in strato where leading 0 is missing from address
                 if (account.Address.Length < 40)
                 {
-                    account.Address = "0" + account.Address;
+                    var zeroes = new String('0',(40- account.Address.Length));
+                    account.Address = zeroes + account.Address;
                 }
                 return account;
             }
@@ -61,7 +62,15 @@ namespace BlockAppsSDK.Users
                 return null;
             }
 
-            var addresses = JsonConvert.DeserializeObject<string[]>(res);
+            var addresses = JsonConvert.DeserializeObject<List<string>>(res);
+            for (var i = 0; i < addresses.Count; i++)
+            {
+                if (addresses[i].Length < 40)
+                {
+                    var zeroes = new String('0', (40 - addresses[i].Length));
+                    addresses[i] = zeroes + addresses[i];
+                }
+            }
             List<Task<Account>> accountTasks = (from address in addresses
                                                select GetAccount(address)).ToList();
             List<Account> accounts = (await Task.WhenAll(accountTasks)).ToList();
@@ -80,8 +89,19 @@ namespace BlockAppsSDK.Users
             //                                   select Utils.GET(Connection.BlocUrl + "/users/" + user)).ToList();
             List<Task<KeyValuePair<string,List<string>>>> userTasks = users.Select(async user => new KeyValuePair<string,List<string>>(user,JsonConvert.DeserializeObject<List<string>>(await Utils.GET(Connection.BlocUrl + "/users/" + user)))).ToList();
             var userAddresses =  (await Task.WhenAll(userTasks)).ToList();
-            return userAddresses.ToDictionary(x => x.Key, x => x.Value);
+            for (var i = 0; i < userAddresses.Count; i++)
+            {
+                for (var j = 0; j < userAddresses[i].Value.Count; j++)
+                {
+                    if (userAddresses[i].Value[j].Length < 40)
+                    {
+                        var zeroes = new String('0', (40 - userAddresses[i].Value[j].Length));
+                        userAddresses[i].Value[j] = zeroes + userAddresses[i].Value[j];
+                    }
+                }
+            }
 
+            return userAddresses.ToDictionary(x => x.Key, x => x.Value);
 
         }
 
@@ -101,7 +121,16 @@ namespace BlockAppsSDK.Users
 
             var postData = new JObject(new JProperty("password", password), new JProperty("faucet", faucetValue)).ToString();
             var userAddress = await Utils.POST(url, postData);
-            return await GetAccount(userAddress);
+
+            if (userAddress.Length < 40)
+            {
+                var zeroes = new String('0', (40 - userAddress.Length));
+                userAddress = zeroes + userAddress;
+            }
+
+            var newAccount = await GetAccount(userAddress);
+            newAccount.Password = password;
+            return newAccount;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace BlockAppsSDK.Users
 {
     public class Account
     {
+        public string Password { private get;  set; }
+
         //Properties
         public string ContractRoot { get; set; }
 
@@ -36,11 +38,11 @@ namespace BlockAppsSDK.Users
         }
 
         //Methods
-        public async Task<AccountTransaction> Send(string toAddress, uint value, string user, string password)
+        public async Task<AccountTransaction> Send(string toAddress, uint value, string user)
         {
             var url = Connection.BlocUrl + "/users/" + user + "/" + Address + "/send";
 
-            var postData = new JObject(new JProperty("password", password), new JProperty("toAddress", toAddress), new JProperty("value", value)).ToString();
+            var postData = new JObject(new JProperty("password", Password), new JProperty("toAddress", toAddress), new JProperty("value", value)).ToString();
 
             var resp = await Utils.POST(url, postData);
 

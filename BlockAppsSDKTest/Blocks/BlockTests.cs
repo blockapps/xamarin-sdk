@@ -22,8 +22,8 @@ namespace BlockAppsSDKTest.Blocks
         [TestInitialize]
         public void SetupManagers()
         {
-            BlockManager = new BlockManager(new Connection("http://40.118.255.235:8000",
-                 "http://40.118.255.235/eth/v1.2"));
+            BlockManager = new BlockManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
+                 "http://tester9.centralus.cloudapp.azure.com"));
         }
     }
 }

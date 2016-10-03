@@ -77,3 +77,18 @@ C:\Users\ConsenSys\dev\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.csproj.Ap
 C:\Users\ConsenSys\dev\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.csprojResolveAssemblyReference.cache
 C:\Users\ConsenSys\dev\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.dll
 C:\Users\ConsenSys\dev\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.pdb
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\BlockAppsSDK.dll.config
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\BlockAppsSDK.dll
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\BlockAppsSDK.pdb
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\Newtonsoft.Json.dll
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\System.Net.Http.dll
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\System.Net.Http.Extensions.dll
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\System.Net.Http.Primitives.dll
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\Newtonsoft.Json.xml
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\System.Net.Http.xml
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\System.Net.Http.Extensions.xml
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\bin\Debug\System.Net.Http.Primitives.xml
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.csproj.App.config
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.csprojResolveAssemblyReference.cache
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.dll
+C:\Users\blockapps\Documents\Visual Studio 2015\Projects\xamarin-sdk\BlockAppsSDK\obj\Debug\BlockAppsSDK.pdb

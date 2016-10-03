@@ -1,4 +1,5 @@
 ﻿using BlockAppsSDK.Blocks;
+using BlockAppsSDK.Contracts;
 using BlockAppsSDK.Users;
 
 namespace BlockAppsSDK
@@ -9,6 +10,7 @@ namespace BlockAppsSDK
 
         public UserManager UserManager { get; private set; }
         public BlockManager BlockManager { get; private set; }
+        public ContractManager ContractManager { get; private set; }
 
 
         public BlockAppsClient(string blocUrl, string stratoUrl)
@@ -22,6 +24,7 @@ namespace BlockAppsSDK
             Connection = connection;
             UserManager = new UserManager(connection);
             BlockManager = new BlockManager(connection);
+            ContractManager = new ContractManager(connection);
         }
     }
 

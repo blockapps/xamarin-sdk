@@ -17,41 +17,40 @@ namespace BlockAppsSDKTest.Contracts
         {
             var src =
                 "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
-            var SimpleStorage = await BoundContractManager.CreateBoundContract(src, "SimpleStorage",
-                "219e43441e184f16fb0386afd3aed1e780632042");
+            var SimpleStorage = await BoundContractManager.CreateBoundContract<SimpleStorageState>(src, "SimpleStorage");
 
             Assert.IsNotNull(SimpleStorage);
-            Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
+            Assert.AreEqual(SimpleStorage.State.StoredData, 0);
         }
 
         [TestMethod]
         public async Task CanGetAllBoundContractsWithName()
         {
-            var boundContracts = await BoundContractManager.GetBoundContractsWithName("SimpleStorage");
-            var nullContracts = await BoundContractManager.GetBoundContractsWithName("NotADeployedContract");
+            var boundContracts = await BoundContractManager.GetBoundContractsWithName<SimpleStorageState>("SimpleStorage");
+            var nullContracts = await BoundContractManager.GetBoundContractsWithName<object>("NotADeployedContract");
             Assert.IsNotNull(boundContracts);
             Assert.IsTrue(boundContracts.Count > 0);
-            Assert.IsNull(nullContracts);
+            Assert.IsTrue(nullContracts.Count == 0);
         }
 
         [TestMethod]
         public async Task CanGetABoundContractWithAddress()
         {
             var contractAddresses = await BoundContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
-            var boundSimpleStorage = await BoundContractManager.GetBoundContract("SimpleStorage",
+            Assert.IsTrue(contractAddresses.Count > 0);
+            var boundSimpleStorage = await BoundContractManager.GetBoundContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
 
             Assert.IsNotNull(boundSimpleStorage);
-            Assert.IsTrue(boundSimpleStorage.Properties["storedData"].Equals("0") || boundSimpleStorage.Properties["storedData"].Equals("1"));
+            Assert.IsTrue(boundSimpleStorage.State.StoredData.Equals(0) || boundSimpleStorage.State.StoredData.Equals(1));
         }
 
         [TestMethod]
         public async Task CanRefreshBoundContract()
         {
             var contractAddresses = await BoundContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
-            var SimpleStorage = await BoundContractManager.GetContract("SimpleStorage",
+            Assert.IsTrue(contractAddresses.Count > 0);
+            var SimpleStorage = await BoundContractManager.GetContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
             Assert.IsNotNull(await SimpleStorage.RefreshContract());
         }
@@ -60,28 +59,28 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanCallBoundContractMethod()
         {
             var contractAddresses = await BoundContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
-            var SimpleStorage = await BoundContractManager.GetBoundContract("SimpleStorage",
+            Assert.IsTrue(contractAddresses.Count > 0);
+            var SimpleStorage = await BoundContractManager.GetBoundContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
             Assert.IsNotNull(SimpleStorage);
             string resp = null;
             var args = new Dictionary<string, string>();
-            if (SimpleStorage.Properties["storedData"].Equals("1"))
+            if (SimpleStorage.State.StoredData.Equals(1))
             {
                 args.Add("x", "0");
                 resp = await SimpleStorage.CallMethod("set", args, 3);
                 Console.WriteLine(resp);
                 await SimpleStorage.RefreshContract();
-                Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
+                Assert.AreEqual(SimpleStorage.State.StoredData, 0);
             }
             else
             {
                 args.Add("x", "1");
                 resp = await SimpleStorage.CallMethod("set", args, 3);
                 Console.WriteLine(resp);
-                Assert.AreEqual(SimpleStorage.Properties["storedData"], "0");
+                Assert.AreEqual(SimpleStorage.State.StoredData, 0);
                 await SimpleStorage.RefreshContract();
-                Assert.AreEqual(SimpleStorage.Properties["storedData"], "1");
+                Assert.AreEqual(SimpleStorage.State.StoredData, 1);
             }
 
         }
@@ -89,14 +88,20 @@ namespace BlockAppsSDKTest.Contracts
         [TestInitialize]
         public void SetupManagers()
         {
-            BoundContractManager = new BoundContractManager(new Connection("http://40.118.255.235:8000",
-                "http://40.118.255.235/eth/v1.2"))
+            BoundContractManager = new BoundContractManager(new Connection("http://tester9.centralus.cloudapp.azure.com:8000",
+                "http://tester9.centralus.cloudapp.azure.com"))
             {
-                Username = "charlie",
-                Password = "test",
-                DefaultAddress = "219e43441e184f16fb0386afd3aed1e780632042"
+                Username = "test",
+                SigningPassword = "test",
+                SigningAddress = "094fec31a8a92735af93cb910b6de2cb9ed49d60"
             };
 
         }
     }
+
+    public class SimpleStorageState
+    {
+        public int StoredData { get; set; }
+    }
+
 }

@@ -11,20 +11,13 @@ using Newtonsoft.Json.Linq;
 
 namespace BlockAppsSDK.Contracts
 {
-    public class Contract : Account
+    public class Contract<T> : Account
     {
         //Properties
         public string Name { get; set; }
-
-        public List<string> Methods { get; set; }
-        
-        public Dictionary<string,string> Properties { get; set; }
-
-
+        public T State { get; set; }
 
         //Constructor
-
-        
         public Contract(Account account) : base(account.Connection)
         {
             ContractRoot = account.ContractRoot;
@@ -36,9 +29,11 @@ namespace BlockAppsSDK.Contracts
         }
 
         //Methods
-        public async Task<string> CallMethod(string methodName, Dictionary<string,string> args, string username, string password, string userAddress, double value)
+        public async Task<string> CallMethod(string methodName, Dictionary<string, string> args, string username,
+            string password, string userAddress, double value)
         {
-            var url = Connection.BlocUrl + "/users/" + username + "/" + userAddress + "/contract/" + this.Name + "/" + this.Address + "/call";
+            var url = Connection.BlocUrl + "/users/" + username + "/" + userAddress + "/contract/" + this.Name + "/" +
+                      this.Address + "/call";
             var postData = "{}";
             if (args != null)
             {
@@ -60,33 +55,23 @@ namespace BlockAppsSDK.Contracts
                 await accountRefresh;
                 return false;
             }
-
-            Methods.Clear();
-            Properties.Clear();
-
-            foreach (var keyValuePair in state)
-            {
-                if (keyValuePair.Value.Contains("function"))
-                {
-                    Methods.Add(keyValuePair.Key);
-                }
-                else
-                {
-                    Properties.Add(keyValuePair.Key, keyValuePair.Value);
-                }
-            }
-
+            State = state;
             await accountRefresh;
             return true;
         }
 
-        private async Task<Dictionary<string, string>> GetContractState(string address)
+        
+
+        private async Task<T> GetContractState(string address)
         {
             var url = Connection.BlocUrl + "/contracts/" + Name + "/" + address + "/state";
             try
             {
                 var responseContent = await Utils.GET(url);
-                var contractState = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseContent);
+                var jsonSerializerSettings = new JsonSerializerSettings();
+                jsonSerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                var contractState = JsonConvert.DeserializeObject<T>(responseContent, jsonSerializerSettings);
+
 
                 return contractState;
             }
@@ -95,18 +80,18 @@ namespace BlockAppsSDK.Contracts
                 throw e;
             }
 
-           
+
+
+
         }
 
+        public class DeployContractModel
+        {
+            public string password { get; set; }
+
+            public string src { get; set; }
+        }
+
+
     }
-
-    public class DeployContractModel
-    {
-        public string password { get; set; }
-
-        public string src { get; set; }
-    }
-
-    
-
 }
