@@ -34,18 +34,26 @@ var BAClient = new BlockAppsClient("http://localhost:8000",
 var newUser = await BAClient.UserManager.CreateUser("test", "test");
 if (newUser == null)
 {
-    Console.WriteLine("User test already exists in Bloc");
+    Console.WriteLine("User test already registered in bloc-server");
 }
 else
 {
-    Console.WriteLine("New User " + newUser.Name + "created");
-    Console.WriteLine(newUser.Name + " has " + newUser.Accounts[newUser.DefaultAccount].Balance + " wei in their default account.");
+     Console.WriteLine("New User " + newUser.Name + "created");
+     Console.WriteLine(newUser.Name + " has " + newUser.Accounts[newUser.SigningAccount].Balance + " wei in their default account.");
 }
 ```
 
 Create a simple smart contract using our new user, `test`, and call
 one of the contract's functions.
 
+First we create our Contract's state model:
+```c#
+public class SimpleStorageState
+{
+    public uint StoredData { get; set; }
+}
+```
+Next we create and then call the contract.
 ```c#
 var BAClient = new BlockAppsClient("http://localhost:8000",
     "http://strato-dev4.blockapps.net/eth/v1.2");
@@ -53,14 +61,15 @@ var BAClient = new BlockAppsClient("http://localhost:8000",
 var newUser = await BAClient.UserManager.CreateUser("test", "test");
 if (newUser == null)
 {
-    newUser = await BAClient.UserManager.GetUser("test", "test");
+    newUser = await BAClient.UserManager.GetUser("test");
+    newUser.SetSigningAccount(newUser.Accounts.FirstOrDefault().Value.Address,"test");
 }
 var src =
     "contract SimpleStorage { uint storedData; function set(uint x) { storedData = x; } function get() returns (uint retVal) { return storedData; } }";
 
 //Create the contract bound to a user.
-var contract = await newUser.BoundContractManager.CreateBoundContract(src, "SimpleStorage");
-Console.WriteLine("The value of storedData is " + contract.Properties["storedData"]);
+var contract = await newUser.BoundContractManager.CreateBoundContract<SimpleStorageState>(src, "SimpleStorage");
+Console.WriteLine("The value of storedData is " + contract.State.StoredData);
 
 //Call the `set` method on the contract to change the value of storedData.
 var args = new Dictionary<string, string>();
@@ -73,7 +82,7 @@ var returnMsg = await contract.CallMethod("set", args, 1);
 //Refresh the contract since we have updated its state
 await contract.RefreshAccount();
 
- Console.WriteLine("The value of storedData has changed to " + contract.Properties["storedData"]);
+Console.WriteLine("The value of storedData has changed to " + contract.State.StoredData);
 }
 ```
 ## Supported Platforms
