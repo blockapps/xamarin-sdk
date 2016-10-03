@@ -35,13 +35,13 @@ namespace BlockAppsSDK.Contracts
 
 
 
-        public async Task<string[]> GetContractAddresses(string name)
+        public async Task<List<string>> GetContractAddresses(string name)
         {
             var hexPatter = @"^[0-9A-Fa-f]+$";
             var url = Connection.BlocUrl + "/contracts/" + name;
             var responseContent = await Utils.GET(url);
 
-            var addresses = JsonConvert.DeserializeObject<string[]>(responseContent).Where(x => Regex.IsMatch(x,hexPatter)).ToArray();
+            var addresses = JsonConvert.DeserializeObject<List<string>>(responseContent).Where(x => Regex.IsMatch(x,hexPatter)).ToList();
 
             return addresses;
         }

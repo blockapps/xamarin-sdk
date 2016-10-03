@@ -62,8 +62,8 @@ namespace BlockAppsSDK.Users
                 return null;
             }
 
-            var addresses = JsonConvert.DeserializeObject<string[]>(res);
-            for (var i = 0; i < addresses.Length; i++)
+            var addresses = JsonConvert.DeserializeObject<List<string>>(res);
+            for (var i = 0; i < addresses.Count; i++)
             {
                 if (addresses[i].Length < 40)
                 {
