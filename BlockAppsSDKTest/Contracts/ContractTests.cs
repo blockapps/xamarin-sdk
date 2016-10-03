@@ -31,8 +31,8 @@ namespace BlockAppsSDKTest.Contracts
         {
             var contractAddresses = await ContractManager.GetContractAddresses("SimpleStorage");
             var noContractAddresses = await ContractManager.GetContractAddresses("SimpleStorageWrong");
-            Assert.IsTrue(contractAddresses.Length > 0);
-            Assert.IsTrue(noContractAddresses.Length == 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
+            Assert.IsTrue(noContractAddresses.Count == 0);
 
         }
 
@@ -50,7 +50,7 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanGetAContractWithAddress()
         {
             var contractAddresses = await ContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
             var SimpleStorage = await ContractManager.GetContract<SimpleStorageState>("SimpleStorage", 
                 contractAddresses[0]);
 
@@ -61,7 +61,7 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanRefreshContract()
         {
             var contractAddresses = await ContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
             var SimpleStorage = await ContractManager.GetContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
             Assert.IsNotNull(await SimpleStorage.RefreshContract());
@@ -71,7 +71,7 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanCallMethodOnContract()
         {
             var contractAddresses = await ContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
             var SimpleStorage = await ContractManager.GetContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
             Assert.IsNotNull(SimpleStorage);

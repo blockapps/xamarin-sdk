@@ -37,7 +37,7 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanGetABoundContractWithAddress()
         {
             var contractAddresses = await BoundContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
             var boundSimpleStorage = await BoundContractManager.GetBoundContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
 
@@ -49,7 +49,7 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanRefreshBoundContract()
         {
             var contractAddresses = await BoundContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
             var SimpleStorage = await BoundContractManager.GetContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
             Assert.IsNotNull(await SimpleStorage.RefreshContract());
@@ -59,7 +59,7 @@ namespace BlockAppsSDKTest.Contracts
         public async Task CanCallBoundContractMethod()
         {
             var contractAddresses = await BoundContractManager.GetContractAddresses("SimpleStorage");
-            Assert.IsTrue(contractAddresses.Length > 0);
+            Assert.IsTrue(contractAddresses.Count > 0);
             var SimpleStorage = await BoundContractManager.GetBoundContract<SimpleStorageState>("SimpleStorage",
                 contractAddresses[0]);
             Assert.IsNotNull(SimpleStorage);
