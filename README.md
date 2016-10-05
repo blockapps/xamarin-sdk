@@ -6,10 +6,18 @@ way to interact with the Strato and Bloc API's with native C# classes.
 
 ## Prerequisites
   * [Git](https://git-scm.com/)
-  * Running [bloc](https://github.com/blockapps/bloc) server
-  * (Optional) Personal [Strato](https://azure.microsoft.com/en-us/marketplace/partners/consensys/blockapps-strato/) instance*
+  * Running [bloc](https://github.com/blockapps/bloc) server\*
+  * (Optional) Personal [Strato](https://azure.microsoft.com/en-us/marketplace/partners/consensys/blockapps-strato/) instance\*\*
 
-  \*We offer a development strato instance at: http://strato-dev4.blockapps.net/eth/v1.2/
+  \*\*We offer a development strato instance at: http://strato-dev4.blockapps.net/eth/v1.2/
+  
+  \*the xamarin-sdk requires the `bloc-server` branch `helium_stage`. If you would like to use a local bloc-server, install bloc with the following instructions:
+  
+  1. run `git clone https://github.com/blockapps/bloc.git -b helium_stage`
+  1. run `cd bloc && npm i && npm link`
+  1. Change to a directory where you would like your bloc server to live.
+  1. Follow the instructions found [here](https://github.com/blockapps/bloc#generate-a-new-blockchain-app) to get started with `bloc`
+
 ## Usage examples
 
 Get Block 2.
