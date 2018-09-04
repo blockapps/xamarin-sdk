@@ -1,3 +1,5 @@
+# DEPRECATED - see developers.blockapps.net for any BlockApps STRATO dev info
+
 # BlockAppsSDK - Strato/Bloc API Client PCL for Xamarin
 
 
